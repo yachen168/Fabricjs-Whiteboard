@@ -8,9 +8,8 @@ const initCanvas = () =>
   new fabric.Canvas("canvas", {
     height: 800,
     width: 800,
-    backgroundColor: "pink",
+    // backgroundColor: "pink",
   });
-
 const rect = new fabric.Rect({
   top: 100,
   left: 100,
@@ -34,22 +33,20 @@ const triangle = new fabric.Triangle({
   fill: "orange",
 });
 
-// const path = new fabric.Path("M 10 10 L 20 120 L 170 200 z");
-// path.set({ left: 300, top: 30, fill: "purple" });
+const setBackgroundImage = (url, canvas) => {
+  fabric.Image.fromURL(
+    url,
+    (img) => {
+      // img.scale(0.3);
+      canvas.add(img);
+    },
+    {
+      top: 0,
+      left: 0,
+    }
+  );
+};
 
-// fabric.Image.fromURL(
-//   "./images/test.jpeg",
-//   (img) => {
-//     img.scale(0.1);
-//     canvas.add(img);
-//   },
-//   {
-//     top: 100,
-//     left: 100,
-//     width: 100,
-//     height: 100,
-//   }
-// );
 const App = () => {
   const [canvas, setCanvas] = useState("");
   useEffect(() => {
@@ -61,6 +58,16 @@ const App = () => {
       <button onClick={() => canvas.add(rect)}>rectangle</button>
       <button onClick={() => canvas.add(circle)}>circle</button>
       <button onClick={() => canvas.add(triangle)}>triangle</button>
+      <button
+        onClick={() =>
+          setBackgroundImage(
+            "https://lh3.googleusercontent.com/proxy/7WAFFrrvSi0t3JENHp1Y5MUDSFXOu7SyLsFZRCG-yyg79igz8IEudYy7JVVY6s-hs9p1MGdVWHcD4qZFJQizfm_2eubPUv-2SYqVcOj6jqB9M5c4IeXDqFrw5k5D",
+            canvas
+          )
+        }
+      >
+        triangle
+      </button>
 
       <canvas id="canvas"></canvas>
     </div>
