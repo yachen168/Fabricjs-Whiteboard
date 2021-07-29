@@ -66,7 +66,7 @@ const App = () => {
           )
         }
       >
-        triangle
+        image
       </button>
 
       <canvas id="canvas"></canvas>
