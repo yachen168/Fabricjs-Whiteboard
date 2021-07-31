@@ -137,6 +137,21 @@ const groupObjects = (canvas, group, shouldGroup) => {
   }
 };
 
+const uploadImage = (canvas) => {
+  return (e) => {
+    const reader = new FileReader();
+    const file = e.target.files[0];
+
+    reader.addEventListener("load", () => {
+      fabric.Image.fromURL(reader.result, (img) => {
+        canvas.add(img);
+      });
+    });
+
+    reader.readAsDataURL(file);
+  };
+};
+
 const App = () => {
   const [canvas, setCanvas] = useState("");
   useEffect(() => {
@@ -176,6 +191,7 @@ const App = () => {
       <button onClick={() => groupObjects(canvas, group, false)}>
         ungroup
       </button>
+      <input type="file" accept="image/*" onChange={uploadImage(canvas)} />
       <canvas id="canvas"></canvas>
     </div>
   );
