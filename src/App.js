@@ -7,6 +7,7 @@ let isMousePressed = false;
 let currentMode;
 let currentColor = "#000000";
 let currentWidth = 1;
+let group = {};
 
 const initCanvas = () =>
   new fabric.Canvas("canvas", {
@@ -28,7 +29,7 @@ const createBackgroundImage = (url, canvas) => {
       cornerSize: 7,
     }
   );
-  canvas.renderAll();
+  canvas.requestRenderAll();
 };
 
 function createRect(canvas) {
@@ -38,6 +39,7 @@ function createRect(canvas) {
     width: 60,
     height: 70,
     fill: currentColor,
+    objectCaching: false,
   });
 
   rect.on("selected", (data) => {
@@ -45,7 +47,7 @@ function createRect(canvas) {
   });
 
   canvas.add(rect);
-  canvas.renderAll();
+  canvas.requestRenderAll();
 }
 
 function createCircle(canvas) {
@@ -55,10 +57,11 @@ function createCircle(canvas) {
     radius: 50,
     fill: currentColor,
     cornerSize: 7,
+    objectCaching: false,
   });
 
   canvas.add(circle);
-  canvas.renderAll();
+  canvas.requestRenderAll();
 }
 
 function createTriangle(canvas) {
@@ -69,10 +72,11 @@ function createTriangle(canvas) {
     height: 70,
     fill: currentColor,
     cornerSize: 7,
+    objectCaching: false,
   });
 
   canvas.add(triangle);
-  canvas.renderAll();
+  canvas.requestRenderAll();
 }
 
 const addCanvasEventListeners = (canvas) => {
@@ -81,24 +85,24 @@ const addCanvasEventListeners = (canvas) => {
 
     if (currentMode === "pencil") {
       canvas.setCursor("crosshair");
-      canvas.renderAll();
+      canvas.requestRenderAll();
     }
   });
 
   canvas.on("mouse:move", (event) => {
     if (isMousePressed && currentMode === "pencil") {
+      canvas.isDrawingMode = true;
       canvas.freeDrawingBrush.color = currentColor;
       canvas.freeDrawingBrush.width = currentWidth;
 
-      canvas.isDrawingMode = true;
-      canvas.renderAll();
+      canvas.requestRenderAll();
     }
   });
 
   canvas.on("mouse:up", (event) => {
     isMousePressed = false;
     canvas.setCursor("default");
-    canvas.renderAll();
+    canvas.requestRenderAll();
   });
 };
 
@@ -112,6 +116,25 @@ const clearCanvas = (canvas) => {
       canvas.remove(item);
     }
   });
+};
+
+const groupObjects = (canvas, group, shouldGroup) => {
+  if (shouldGroup) {
+    const objects = canvas.getObjects();
+    group.value = new fabric.Group(objects);
+    clearCanvas(canvas); // 先清除先前的，否則會重複出現兩組
+
+    canvas.add(group.value);
+  } else {
+    if (group.value) {
+      group.value.destroy();
+      const oldGroup = group.value.getObjects();
+      canvas.remove(group.value);
+      canvas.add(...oldGroup);
+      group.value = null;
+      canvas.requestRenderAll();
+    }
+  }
 };
 
 const App = () => {
@@ -147,6 +170,12 @@ const App = () => {
         onChange={(e) => (currentWidth = e.target.value)}
       />
       <button onClick={() => clearCanvas(canvas)}>clear all</button>
+      <button onClick={() => groupObjects(canvas, group, true)}>
+        group all objects
+      </button>
+      <button onClick={() => groupObjects(canvas, group, false)}>
+        ungroup
+      </button>
       <canvas id="canvas"></canvas>
     </div>
   );
