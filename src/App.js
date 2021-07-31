@@ -1,39 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { fabric } from "fabric";
-// import testImage from "./images/test.jpeg";
 
 import styles from "./app.module.scss";
 
+let isMousePressed = false;
+let currentMode;
+let currentColor = "#000000";
+let currentWidth = 1;
+
 const initCanvas = () =>
   new fabric.Canvas("canvas", {
-    height: 800,
-    width: 800,
-    // backgroundColor: "pink",
+    height: 500,
+    width: 500,
+    selection: false,
   });
-const rect = new fabric.Rect({
-  top: 100,
-  left: 100,
-  width: 60,
-  height: 70,
-  fill: "blue",
-});
 
-const circle = new fabric.Circle({
-  top: 200,
-  left: 200,
-  radius: 50,
-  fill: "green",
-});
-
-const triangle = new fabric.Triangle({
-  top: 400,
-  left: 300,
-  width: 50,
-  height: 70,
-  fill: "orange",
-});
-
-const setBackgroundImage = (url, canvas) => {
+const createBackgroundImage = (url, canvas) => {
   fabric.Image.fromURL(
     url,
     (img) => {
@@ -43,8 +25,93 @@ const setBackgroundImage = (url, canvas) => {
     {
       top: 0,
       left: 0,
+      cornerSize: 7,
     }
   );
+  canvas.renderAll();
+};
+
+function createRect(canvas) {
+  const rect = new fabric.Rect({
+    top: 100,
+    left: 100,
+    width: 60,
+    height: 70,
+    fill: currentColor,
+  });
+
+  rect.on("selected", (data) => {
+    console.log("選中了", data);
+  });
+
+  canvas.add(rect);
+  canvas.renderAll();
+}
+
+function createCircle(canvas) {
+  const circle = new fabric.Circle({
+    top: 200,
+    left: 200,
+    radius: 50,
+    fill: currentColor,
+    cornerSize: 7,
+  });
+
+  canvas.add(circle);
+  canvas.renderAll();
+}
+
+function createTriangle(canvas) {
+  const triangle = new fabric.Triangle({
+    top: 400,
+    left: 300,
+    width: 50,
+    height: 70,
+    fill: currentColor,
+    cornerSize: 7,
+  });
+
+  canvas.add(triangle);
+  canvas.renderAll();
+}
+
+const addCanvasEventListeners = (canvas) => {
+  canvas.on("mouse:down", (event) => {
+    isMousePressed = true;
+
+    if (currentMode === "pencil") {
+      canvas.setCursor("crosshair");
+      canvas.renderAll();
+    }
+  });
+
+  canvas.on("mouse:move", (event) => {
+    if (isMousePressed && currentMode === "pencil") {
+      canvas.freeDrawingBrush.color = currentColor;
+      canvas.freeDrawingBrush.width = currentWidth;
+
+      canvas.isDrawingMode = true;
+      canvas.renderAll();
+    }
+  });
+
+  canvas.on("mouse:up", (event) => {
+    isMousePressed = false;
+    canvas.setCursor("default");
+    canvas.renderAll();
+  });
+};
+
+const toggleMode = (mode) => {
+  currentMode = mode;
+};
+
+const clearCanvas = (canvas) => {
+  canvas.getObjects().forEach((item) => {
+    if (item !== canvas.backgroundImage) {
+      canvas.remove(item);
+    }
+  });
 };
 
 const App = () => {
@@ -53,22 +120,33 @@ const App = () => {
     setCanvas(initCanvas());
   }, []);
 
+  useEffect(() => {
+    if (canvas) {
+      addCanvasEventListeners(canvas);
+    }
+  }, [canvas]);
+
   return (
     <div className={styles.app}>
-      <button onClick={() => canvas.add(rect)}>rectangle</button>
-      <button onClick={() => canvas.add(circle)}>circle</button>
-      <button onClick={() => canvas.add(triangle)}>triangle</button>
+      <button onClick={() => createRect(canvas)}>rectangle</button>
+      <button onClick={() => createCircle(canvas)}>circle</button>
+      <button onClick={() => createTriangle(canvas)}>triangle</button>
       <button
         onClick={() =>
-          setBackgroundImage(
-            "https://lh3.googleusercontent.com/proxy/7WAFFrrvSi0t3JENHp1Y5MUDSFXOu7SyLsFZRCG-yyg79igz8IEudYy7JVVY6s-hs9p1MGdVWHcD4qZFJQizfm_2eubPUv-2SYqVcOj6jqB9M5c4IeXDqFrw5k5D",
-            canvas
-          )
+          createBackgroundImage("https://i.imgur.com/MFdYlTH.png", canvas)
         }
       >
         image
       </button>
-
+      <button onClick={() => toggleMode("pencil")}>pencil</button>
+      <input type="color" onChange={(e) => (currentColor = e.target.value)} />
+      <input
+        type="range"
+        min={1}
+        max={20}
+        onChange={(e) => (currentWidth = e.target.value)}
+      />
+      <button onClick={() => clearCanvas(canvas)}>clear all</button>
       <canvas id="canvas"></canvas>
     </div>
   );
