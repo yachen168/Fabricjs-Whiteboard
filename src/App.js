@@ -32,7 +32,7 @@ const createBackgroundImage = (url, canvas) => {
   canvas.requestRenderAll();
 };
 
-function createRect(canvas, options) {
+const createRect = (canvas, options) => {
   const rect = new fabric.Rect({
     top: 100,
     left: 100,
@@ -48,9 +48,9 @@ function createRect(canvas, options) {
 
   canvas.add(rect);
   canvas.requestRenderAll();
-}
+};
 
-function createCircle(canvas, options) {
+const createCircle = (canvas, options) => {
   const circle = new fabric.Circle({
     top: 200,
     left: 200,
@@ -62,9 +62,9 @@ function createCircle(canvas, options) {
 
   canvas.add(circle);
   canvas.requestRenderAll();
-}
+};
 
-function createTriangle(canvas, options) {
+const createTriangle = (canvas, options) => {
   canvas.isDrawingMode = false;
   const triangle = new fabric.Triangle({
     top: 400,
@@ -78,7 +78,19 @@ function createTriangle(canvas, options) {
 
   canvas.add(triangle);
   canvas.requestRenderAll();
-}
+};
+
+const createText = (canvas) => {
+  const text = new fabric.Textbox("text", {
+    left: 100,
+    top: 100,
+    fill: options.currentColor,
+    editable: true,
+  });
+
+  canvas.add(text);
+  canvas.renderAll();
+};
 
 const clearCanvas = (canvas) => {
   canvas.getObjects().forEach((item) => {
@@ -181,6 +193,7 @@ const App = () => {
       <button onClick={() => toggleMode("drawing", editor.canvas)}>
         pencil
       </button>
+      <button onClick={() => createText(editor.canvas)}>text</button>
       <input type="color" onChange={changeCurrentColor} />
       <input type="range" min={1} max={20} onChange={changeCurrentWidth} />
       <button onClick={() => clearCanvas(editor.canvas)}>clear all</button>
