@@ -1,25 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { fabric } from "fabric";
+import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
 import styles from "./app.module.scss";
 
-let isMousePressed = false;
-let currentMode;
-let currentColor = "#000000";
-let currentWidth = 1;
-let group = {};
+const options = {
+  currentMode: "",
+  currentColor: "#000000",
+  currentWidth: 5,
+  group: {},
+};
 
 const modes = {
   pan: "pan",
   drawing: "drawing",
 };
-
-const initCanvas = () =>
-  new fabric.Canvas("canvas", {
-    height: 500,
-    width: 500,
-    selection: false,
-  });
 
 const createBackgroundImage = (url, canvas) => {
   fabric.Image.fromURL(
@@ -37,13 +32,13 @@ const createBackgroundImage = (url, canvas) => {
   canvas.requestRenderAll();
 };
 
-function createRect(canvas) {
+function createRect(canvas, options) {
   const rect = new fabric.Rect({
     top: 100,
     left: 100,
     width: 60,
     height: 70,
-    fill: currentColor,
+    fill: options.currentColor,
     objectCaching: false,
   });
 
@@ -55,12 +50,12 @@ function createRect(canvas) {
   canvas.requestRenderAll();
 }
 
-function createCircle(canvas) {
+function createCircle(canvas, options) {
   const circle = new fabric.Circle({
     top: 200,
     left: 200,
     radius: 50,
-    fill: currentColor,
+    fill: options.currentColor,
     cornerSize: 7,
     objectCaching: false,
   });
@@ -69,13 +64,14 @@ function createCircle(canvas) {
   canvas.requestRenderAll();
 }
 
-function createTriangle(canvas) {
+function createTriangle(canvas, options) {
+  canvas.isDrawingMode = false;
   const triangle = new fabric.Triangle({
     top: 400,
     left: 300,
     width: 50,
     height: 70,
-    fill: currentColor,
+    fill: options.currentColor,
     cornerSize: 7,
     objectCaching: false,
   });
@@ -83,44 +79,6 @@ function createTriangle(canvas) {
   canvas.add(triangle);
   canvas.requestRenderAll();
 }
-
-const addCanvasEventListeners = (canvas) => {
-  canvas.on("mouse:down", (event) => {
-    isMousePressed = true;
-  });
-
-  canvas.on("mouse:move", (event) => {
-    if (currentMode === modes.drawing) {
-      canvas.setCursor("crosshair");
-      canvas.requestRenderAll();
-    }
-
-    if (isMousePressed && currentMode === modes.pan) {
-      canvas.setCursor("grab");
-      canvas.requestRenderAll();
-    } else if (isMousePressed && currentMode === modes.drawing) {
-      canvas.isDrawingMode = true;
-      canvas.freeDrawingBrush.color = currentColor;
-      canvas.freeDrawingBrush.width = currentWidth;
-
-      canvas.requestRenderAll();
-    }
-  });
-
-  canvas.on("mouse:up", (event) => {
-    isMousePressed = false;
-    // canvas.setCursor("default");
-    // canvas.requestRenderAll();
-  });
-};
-
-const toggleMode = (mode) => {
-  if (currentMode === modes[mode]) {
-    currentMode = "";
-  } else {
-    currentMode = modes[mode];
-  }
-};
 
 const clearCanvas = (canvas) => {
   canvas.getObjects().forEach((item) => {
@@ -142,84 +100,101 @@ const canvasToJson = (canvas) => {
   console.log(JSON.stringify(canvas.toJSON()));
 };
 
-const groupObjects = (canvas, group, shouldGroup) => {
+const groupObjects = (canvas, options, shouldGroup) => {
   if (shouldGroup) {
     const objects = canvas.getObjects();
-    group.value = new fabric.Group(objects);
+    options.group.value = new fabric.Group(objects);
     clearCanvas(canvas); // 先清除先前的，否則會重複出現兩組
 
-    canvas.add(group.value);
+    canvas.add(options.group.value);
   } else {
-    if (group.value) {
-      group.value.destroy();
-      const oldGroup = group.value.getObjects();
-      canvas.remove(group.value);
+    if (options.group.value) {
+      options.group.value.destroy();
+      const oldGroup = options.group.value.getObjects();
+      canvas.remove(options.group.value);
       canvas.add(...oldGroup);
-      group.value = null;
+      options.group.value = null;
       canvas.requestRenderAll();
     }
   }
 };
 
-const uploadImage = (canvas) => {
-  return (e) => {
+const toggleMode = (mode, canvas) => {
+  if (options.currentMode === modes[mode]) {
+    options.currentMode = "";
+  } else {
+    options.currentMode = modes[mode];
+
+    if (mode === modes.drawing) {
+      canvas.isDrawingMode = true;
+    }
+  }
+};
+
+const App = () => {
+  const { editor, onReady } = useFabricJSEditor();
+
+  const uploadImage = (e) => {
     const reader = new FileReader();
     const file = e.target.files[0];
 
     reader.addEventListener("load", () => {
       fabric.Image.fromURL(reader.result, (img) => {
-        canvas.add(img);
+        editor.canvas.add(img);
       });
     });
 
     reader.readAsDataURL(file);
   };
-};
 
-const App = () => {
-  const [canvas, setCanvas] = useState("");
-  useEffect(() => {
-    setCanvas(initCanvas());
-  }, []);
+  const changeCurrentWidth = (e) => {
+    options.currentWidth = e.target.value;
+    editor.canvas.freeDrawingBrush.width = parseInt(e.target.value);
+  };
 
-  useEffect(() => {
-    if (canvas) {
-      addCanvasEventListeners(canvas);
-    }
-  }, [canvas]);
+  const changeCurrentColor = (e) => {
+    options.currentColor = e.target.value;
+    editor.canvas.freeDrawingBrush.color = e.target.value;
+  };
 
   return (
     <div className={styles.app}>
-      <button onClick={() => createRect(canvas)}>rectangle</button>
-      <button onClick={() => createCircle(canvas)}>circle</button>
-      <button onClick={() => createTriangle(canvas)}>triangle</button>
+      <button onClick={() => createRect(editor.canvas, options)}>
+        rectangle
+      </button>
+      <button onClick={() => createCircle(editor.canvas, options)}>
+        circle
+      </button>
+      <button onClick={() => createTriangle(editor.canvas, options)}>
+        triangle
+      </button>
       <button
         onClick={() =>
-          createBackgroundImage("https://i.imgur.com/MFdYlTH.png", canvas)
+          createBackgroundImage(
+            "https://i.imgur.com/MFdYlTH.png",
+            editor.canvas
+          )
         }
       >
         image
       </button>
-      <button onClick={() => toggleMode(modes.drawing)}>pencil</button>
-      <input type="color" onChange={(e) => (currentColor = e.target.value)} />
-      <input
-        type="range"
-        min={1}
-        max={20}
-        onChange={(e) => (currentWidth = e.target.value)}
-      />
-      <button onClick={() => clearCanvas(canvas)}>clear all</button>
-      <button onClick={() => groupObjects(canvas, group, true)}>
+      <button onClick={() => toggleMode("drawing", editor.canvas)}>
+        pencil
+      </button>
+      <input type="color" onChange={changeCurrentColor} />
+      <input type="range" min={1} max={20} onChange={changeCurrentWidth} />
+      <button onClick={() => clearCanvas(editor.canvas)}>clear all</button>
+      <button onClick={() => groupObjects(editor.canvas, options, true)}>
         group all objects
       </button>
-      <button onClick={() => groupObjects(canvas, group, false)}>
+      <button onClick={() => groupObjects(editor.canvas, options, false)}>
         ungroup
       </button>
 
-      <button onClick={() => canvasToJson(canvas)}>toJson</button>
-      <button onClick={() => canvasFromJson(canvas)}>fromJson</button>
-      <input type="file" accept="image/*" onChange={uploadImage(canvas)} />
-      <canvas id="canvas"></canvas>
+      <button onClick={() => canvasToJson(editor.canvas)}>toJson</button>
+      <button onClick={() => canvasFromJson(editor.canvas)}>fromJson</button>
+      <input type="file" accept="image/*" onChange={uploadImage} />
+      <FabricJSCanvas className={styles.canvas} onReady={onReady} />
     </div>
   );
 };
