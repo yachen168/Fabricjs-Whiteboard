@@ -81,6 +81,7 @@ const createTriangle = (canvas, options) => {
 };
 
 const createText = (canvas) => {
+  canvas.isDrawingMode = false;
   const text = new fabric.Textbox("text", {
     left: 100,
     top: 100,
