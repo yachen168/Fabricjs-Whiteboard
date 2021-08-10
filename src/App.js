@@ -1,19 +1,20 @@
-import React from "react";
-import { fabric } from "fabric";
-import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
+import React from 'react';
+import { fabric } from 'fabric';
+import './eraserBrush';
+import { FabricJSCanvas, useFabricJSEditor } from 'fabricjs-react';
 
-import styles from "./app.module.scss";
+import styles from './app.module.scss';
 
 const options = {
-  currentMode: "",
-  currentColor: "#000000",
+  currentMode: '',
+  currentColor: '#000000',
   currentWidth: 5,
   group: {},
 };
 
 const modes = {
-  pan: "pan",
-  drawing: "drawing",
+  pan: 'pan',
+  drawing: 'drawing',
 };
 
 const createBackgroundImage = (url, canvas) => {
@@ -40,10 +41,11 @@ const createRect = (canvas, options) => {
     height: 70,
     fill: options.currentColor,
     objectCaching: false,
+    erasable: true,
   });
 
-  rect.on("selected", (data) => {
-    console.log("選中了", data);
+  rect.on('selected', (data) => {
+    console.log('選中了', data);
   });
 
   canvas.add(rect);
@@ -82,7 +84,7 @@ const createTriangle = (canvas, options) => {
 
 const createText = (canvas) => {
   canvas.isDrawingMode = false;
-  const text = new fabric.Textbox("text", {
+  const text = new fabric.Textbox('text', {
     left: 100,
     top: 100,
     fill: options.currentColor,
@@ -91,6 +93,12 @@ const createText = (canvas) => {
 
   canvas.add(text);
   canvas.renderAll();
+};
+
+const changeToErasingMode = (canvas) => {
+  canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
+  canvas.freeDrawingBrush.width = options.currentWidth;
+  canvas.isDrawingMode = true;
 };
 
 const clearCanvas = (canvas) => {
@@ -134,7 +142,7 @@ const groupObjects = (canvas, options, shouldGroup) => {
 
 const toggleMode = (mode, canvas) => {
   if (options.currentMode === modes[mode]) {
-    options.currentMode = "";
+    options.currentMode = '';
   } else {
     options.currentMode = modes[mode];
 
@@ -144,6 +152,12 @@ const toggleMode = (mode, canvas) => {
   }
 };
 
+const draw = (canvas) => {
+  canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+  canvas.freeDrawingBrush.width = 10;
+  canvas.isDrawingMode = true;
+};
+
 const App = () => {
   const { editor, onReady } = useFabricJSEditor();
 
@@ -151,7 +165,7 @@ const App = () => {
     const reader = new FileReader();
     const file = e.target.files[0];
 
-    reader.addEventListener("load", () => {
+    reader.addEventListener('load', () => {
       fabric.Image.fromURL(reader.result, (img) => {
         editor.canvas.add(img);
       });
@@ -172,38 +186,22 @@ const App = () => {
 
   return (
     <div className={styles.app}>
-      <button onClick={() => createRect(editor.canvas, options)}>
-        rectangle
-      </button>
-      <button onClick={() => createCircle(editor.canvas, options)}>
-        circle
-      </button>
-      <button onClick={() => createTriangle(editor.canvas, options)}>
-        triangle
-      </button>
+      <button onClick={() => createRect(editor.canvas, options)}>rectangle</button>
+      <button onClick={() => createCircle(editor.canvas, options)}>circle</button>
+      <button onClick={() => createTriangle(editor.canvas, options)}>triangle</button>
       <button
-        onClick={() =>
-          createBackgroundImage(
-            "https://i.imgur.com/MFdYlTH.png",
-            editor.canvas
-          )
-        }
+        onClick={() => createBackgroundImage('https://i.imgur.com/MFdYlTH.png', editor.canvas)}
       >
         image
       </button>
-      <button onClick={() => toggleMode("drawing", editor.canvas)}>
-        pencil
-      </button>
+      <button onClick={() => draw(editor.canvas)}>pencil</button>
+      <button onClick={() => changeToErasingMode(editor.canvas)}>eraser</button>
       <button onClick={() => createText(editor.canvas)}>text</button>
       <input type="color" onChange={changeCurrentColor} />
       <input type="range" min={1} max={20} onChange={changeCurrentWidth} />
       <button onClick={() => clearCanvas(editor.canvas)}>clear all</button>
-      <button onClick={() => groupObjects(editor.canvas, options, true)}>
-        group all objects
-      </button>
-      <button onClick={() => groupObjects(editor.canvas, options, false)}>
-        ungroup
-      </button>
+      <button onClick={() => groupObjects(editor.canvas, options, true)}>group all objects</button>
+      <button onClick={() => groupObjects(editor.canvas, options, false)}>ungroup</button>
 
       <button onClick={() => canvasToJson(editor.canvas)}>toJson</button>
       <button onClick={() => canvasFromJson(editor.canvas)}>fromJson</button>
