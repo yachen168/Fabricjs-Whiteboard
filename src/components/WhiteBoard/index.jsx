@@ -194,7 +194,7 @@ const startAddEllipse = (canvas) => {
     origX = pointer.x;
     origY = pointer.y;
     drawInstance = new fabric.Ellipse({
-      stroke: 'black',
+      stroke: options.currentColor,
       strokeWidth: options.currentWidth,
       fill: options.fill ? options.currentColor : 'transparent',
       left: origX,
