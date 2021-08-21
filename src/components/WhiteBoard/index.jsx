@@ -33,6 +33,7 @@ const modes = {
   ELLIPSE: 'ELLIPSE',
   LINE: 'LINE',
   PENCIL: 'PENCIL',
+  ERASER: 'ERASER',
 };
 
 const initCanvas = () =>
@@ -312,9 +313,16 @@ const createText = (canvas) => {
 };
 
 const changeToErasingMode = (canvas) => {
-  canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
-  canvas.freeDrawingBrush.width = options.currentWidth;
-  canvas.isDrawingMode = true;
+  if (options.currentMode !== modes.ERASER) {
+    canvas.off('mouse:down');
+    canvas.off('mouse:move');
+    canvas.off('mouse:up');
+
+    options.currentMode = modes.ERASER;
+    canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
+    canvas.freeDrawingBrush.width = options.currentWidth;
+    canvas.isDrawingMode = true;
+  }
 };
 
 const clearCanvas = (canvas) => {
