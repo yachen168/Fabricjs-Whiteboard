@@ -1,3 +1,9 @@
+.whiteboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .toolbar {
   display: flex;
   flex-wrap: wrap;
