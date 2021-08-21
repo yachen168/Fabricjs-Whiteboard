@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { fabric } from 'fabric';
 import { FileUpload } from 'primereact/fileupload';
 import { Button } from 'primereact/button';
+import { Checkbox } from 'primereact/checkbox';
 
 import './eraserBrush';
 
@@ -13,16 +14,25 @@ const chooseOptions = {
   className: 'custom-upload-btn p-button-info p-button-rounded p-button-outlined',
 };
 
+let drawInstance = null;
+let origX;
+let origY;
+let mouseDown = false;
+
 const options = {
   currentMode: '',
   currentColor: '#000000',
   currentWidth: 5,
+  fill: false,
   group: {},
 };
 
 const modes = {
-  pan: 'pan',
-  drawing: 'drawing',
+  RECTANGLE: 'RECTANGLE',
+  TRIANGLE: 'TRIANGLE',
+  ELLIPSE: 'ELLIPSE',
+  LINE: 'LINE',
+  PENCIL: 'PENCIL',
 };
 
 const initCanvas = () =>
@@ -31,53 +41,261 @@ const initCanvas = () =>
     width: 800,
   });
 
-const createRect = (canvas, options) => {
-  const rect = new fabric.Rect({
-    top: 100,
-    left: 100,
-    width: 60,
-    height: 70,
-    fill: options.currentColor,
-    objectCaching: false,
-    erasable: true,
-  });
+/*  ==== line  ==== */
+const createLine = (canvas) => {
+  if (modes.currentMode !== modes.LINE) {
+    options.currentMode = modes.LINE;
 
-  rect.on('selected', (data) => {
-    console.log('選中了', data);
-  });
+    canvas.off('mouse:down');
+    canvas.off('mouse:move');
+    canvas.off('mouse:up');
 
-  canvas.add(rect);
-  canvas.requestRenderAll();
+    canvas.on('mouse:down', startAddLine(canvas));
+    canvas.on('mouse:move', startDrawingLine(canvas));
+    canvas.on('mouse:up', stopDrawingLine);
+
+    canvas.selection = false;
+    canvas.hoverCursor = 'auto';
+    canvas.isDrawingMode = false;
+    canvas.getObjects().map((item) => item.set({ selectable: false }));
+    canvas.discardActiveObject().requestRenderAll();
+  }
 };
 
-const createCircle = (canvas, options) => {
-  const circle = new fabric.Circle({
-    top: 200,
-    left: 200,
-    radius: 50,
-    fill: options.currentColor,
-    cornerSize: 7,
-    objectCaching: false,
-  });
+const startAddLine = (canvas) => {
+  return ({ e }) => {
+    mouseDown = true;
 
-  canvas.add(circle);
-  canvas.requestRenderAll();
+    let pointer = canvas.getPointer(e);
+    drawInstance = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
+      strokeWidth: options.currentWidth,
+      stroke: options.currentColor,
+      selectable: false,
+    });
+
+    canvas.add(drawInstance);
+    canvas.requestRenderAll();
+  };
 };
 
-const createTriangle = (canvas, options) => {
+const startDrawingLine = (canvas) => {
+  return ({ e }) => {
+    if (mouseDown) {
+      const pointer = canvas.getPointer(e);
+      drawInstance.set({
+        x2: pointer.x,
+        y2: pointer.y,
+      });
+      drawInstance.setCoords();
+      canvas.requestRenderAll();
+    }
+  };
+};
+const stopDrawingLine = () => {
+  mouseDown = false;
+};
+
+/* ==== rectangle ==== */
+const createRect = (canvas) => {
+  if (options.currentMode !== modes.RECTANGLE) {
+    options.currentMode = modes.RECTANGLE;
+
+    canvas.off('mouse:down');
+    canvas.off('mouse:move');
+    canvas.off('mouse:up');
+
+    canvas.on('mouse:down', startAddRect(canvas));
+    canvas.on('mouse:move', startDrawingRect(canvas));
+    canvas.on('mouse:up', stopDrawingRect);
+
+    canvas.selection = false;
+    canvas.hoverCursor = 'auto';
+    canvas.isDrawingMode = false;
+    canvas.getObjects().map((item) => item.set({ selectable: false }));
+    canvas.discardActiveObject().requestRenderAll();
+  }
+};
+
+const startAddRect = (canvas) => {
+  return ({ e }) => {
+    mouseDown = true;
+
+    const pointer = canvas.getPointer(e);
+    origX = pointer.x;
+    origY = pointer.y;
+
+    drawInstance = new fabric.Rect({
+      stroke: options.currentColor,
+      strokeWidth: options.currentWidth,
+      fill: options.fill ? options.currentColor : 'transparent',
+      left: origX,
+      top: origY,
+      width: 0,
+      height: 0,
+      selectionBackgroundColor: 'rgba(245, 245, 220, 0.5)',
+      selectable: false,
+    });
+
+    canvas.add(drawInstance);
+  };
+};
+
+const startDrawingRect = (canvas) => {
+  return ({ e }) => {
+    if (mouseDown) {
+      const pointer = canvas.getPointer(e);
+
+      if (pointer.x < origX) {
+        drawInstance.set('left', pointer.x);
+      }
+      if (pointer.y < origY) {
+        drawInstance.set('top', pointer.y);
+      }
+      drawInstance.set({
+        width: Math.abs(pointer.x - origX),
+        height: Math.abs(pointer.y - origY),
+      });
+      drawInstance.setCoords();
+      canvas.renderAll();
+    }
+  };
+};
+
+const stopDrawingRect = () => {
+  mouseDown = false;
+};
+
+/* ==== Ellipse ==== */
+const createEllipse = (canvas) => {
+  if (options.currentMode !== modes.ELLIPSE) {
+    options.currentMode = modes.ELLIPSE;
+
+    canvas.off('mouse:down');
+    canvas.off('mouse:move');
+    canvas.off('mouse:up');
+
+    canvas.on('mouse:down', startAddEllipse(canvas));
+    canvas.on('mouse:move', startDrawingEllipse(canvas));
+    canvas.on('mouse:up', stopDrawingEllipse);
+
+    canvas.selection = false;
+    canvas.hoverCursor = 'auto';
+    canvas.isDrawingMode = false;
+    canvas.getObjects().map((item) => item.set({ selectable: false }));
+    canvas.discardActiveObject().requestRenderAll();
+  }
+};
+
+const startAddEllipse = (canvas) => {
+  return ({ e }) => {
+    mouseDown = true;
+
+    const pointer = canvas.getPointer(e);
+    origX = pointer.x;
+    origY = pointer.y;
+    drawInstance = new fabric.Ellipse({
+      stroke: 'black',
+      strokeWidth: options.currentWidth,
+      fill: options.fill ? options.currentColor : 'transparent',
+      left: origX,
+      top: origY,
+      cornerSize: 7,
+      objectCaching: false,
+      selectionBackgroundColor: 'rgba(245, 245, 220, 0.5)',
+      selectable: false,
+    });
+
+    canvas.add(drawInstance);
+  };
+};
+
+const startDrawingEllipse = (canvas) => {
+  return ({ e }) => {
+    if (mouseDown) {
+      const pointer = canvas.getPointer(e);
+      if (pointer.x < origX) {
+        drawInstance.set('left', pointer.x);
+      }
+      if (pointer.y < origY) {
+        drawInstance.set('top', pointer.y);
+      }
+      drawInstance.set({
+        rx: Math.abs(pointer.x - origX) / 2,
+        ry: Math.abs(pointer.y - origY) / 2,
+      });
+      drawInstance.setCoords();
+      canvas.renderAll();
+    }
+  };
+};
+
+const stopDrawingEllipse = () => {
+  mouseDown = false;
+};
+
+/* === triangle === */
+const createTriangle = (canvas) => {
+  canvas.off('mouse:down');
+  canvas.off('mouse:move');
+  canvas.off('mouse:up');
+
+  canvas.on('mouse:down', startAddTriangle(canvas));
+  canvas.on('mouse:move', startDrawingTriangle(canvas));
+  canvas.on('mouse:up', stopDrawingTriangle);
+
+  canvas.selection = false;
+  canvas.hoverCursor = 'auto';
   canvas.isDrawingMode = false;
-  const triangle = new fabric.Triangle({
-    top: 50,
-    left: 50,
-    width: 50,
-    height: 70,
-    fill: options.currentColor,
-    cornerSize: 7,
-    objectCaching: false,
-  });
+  canvas.getObjects().map((item) => item.set({ selectable: false }));
+  canvas.discardActiveObject().requestRenderAll();
+};
 
-  canvas.add(triangle);
-  canvas.requestRenderAll();
+const startAddTriangle = (canvas) => {
+  return ({ e }) => {
+    mouseDown = true;
+    options.currentMode = modes.TRIANGLE;
+
+    const pointer = canvas.getPointer(e);
+    origX = pointer.x;
+    origY = pointer.y;
+    drawInstance = new fabric.Triangle({
+      stroke: options.currentColor,
+      strokeWidth: options.currentWidth,
+      fill: options.fill ? options.currentColor : 'transparent',
+      left: origX,
+      top: origY,
+      width: 0,
+      height: 0,
+      selectionBackgroundColor: 'rgba(245, 245, 220, 0.5)',
+      selectable: false,
+    });
+
+    canvas.add(drawInstance);
+  };
+};
+
+const startDrawingTriangle = (canvas) => {
+  return ({ e }) => {
+    if (mouseDown) {
+      const pointer = canvas.getPointer(e);
+      if (pointer.x < origX) {
+        drawInstance.set('left', pointer.x);
+      }
+      if (pointer.y < origY) {
+        drawInstance.set('top', pointer.y);
+      }
+      drawInstance.set({
+        width: Math.abs(pointer.x - origX),
+        height: Math.abs(pointer.y - origY),
+      });
+      drawInstance.setCoords();
+      canvas.renderAll();
+    }
+  };
+};
+
+const stopDrawingTriangle = () => {
+  mouseDown = false;
 };
 
 const createText = (canvas) => {
@@ -128,27 +346,19 @@ const canvasToJson = (canvas) => {
   alert(JSON.stringify(canvas.toJSON()));
 };
 
-const toggleMode = (mode, canvas) => {
-  if (options.currentMode === modes[mode]) {
-    options.currentMode = '';
-  } else {
-    options.currentMode = modes[mode];
-
-    if (mode === modes.drawing) {
-      canvas.isDrawingMode = true;
-    }
-  }
-};
-
 const draw = (canvas) => {
-  canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
-  canvas.freeDrawingBrush.width = options.currentWidth;
-  canvas.isDrawingMode = true;
+  if (options.currentMode !== modes.PENCIL) {
+    options.currentMode = modes.PENCIL;
+    canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+    canvas.freeDrawingBrush.width = options.currentWidth;
+    canvas.isDrawingMode = true;
+  }
 };
 
 const Whiteboard = () => {
   const [canvas, setCanvas] = useState(null);
   const [canvasJSON, setCanvasJSON] = useState(null);
+  const [isFill, setIsFill] = useState(false);
   const fileUploadRef = useRef(null);
 
   useEffect(() => {
@@ -171,7 +381,6 @@ const Whiteboard = () => {
 
   const uploadImage = (e) => {
     const reader = new FileReader();
-    console.log(e);
     const file = e.files[0];
 
     reader.addEventListener('load', () => {
@@ -195,18 +404,29 @@ const Whiteboard = () => {
     canvas.freeDrawingBrush.color = e.target.value;
   };
 
+  const changeFill = (e) => {
+    console.log(e);
+    options.fill = e.checked;
+    setIsFill(() => e.checked);
+  };
+
   return (
     <div className={styles.whiteboard}>
       <div className={styles.toolbar}>
         <Button
-          label="rectangle"
+          label="line"
           className="p-button-info p-button-rounded p-button-outlined"
-          onClick={() => createRect(canvas, options)}
+          onClick={() => createLine(canvas)}
         />
         <Button
-          label="circle"
+          label="rectangle"
           className="p-button-info p-button-rounded p-button-outlined"
-          onClick={() => createCircle(canvas, options)}
+          onClick={() => createRect(canvas)}
+        />
+        <Button
+          label="ellipse"
+          className="p-button-info p-button-rounded p-button-outlined"
+          onClick={() => createEllipse(canvas)}
         />
         <Button
           label="triangle"
@@ -239,6 +459,8 @@ const Whiteboard = () => {
           onChange={changeCurrentColor}
         />
         <input type="range" min={1} max={20} step={1} onChange={changeCurrentWidth} />
+        <Checkbox id="fill" checked={isFill} onChange={changeFill} />
+        <label htmlFor="fill">fill</label>
         <Button
           label="clear all"
           className="p-button-info p-button-rounded p-button-outlined"
