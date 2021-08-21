@@ -348,6 +348,10 @@ const canvasToJson = (canvas) => {
 
 const draw = (canvas) => {
   if (options.currentMode !== modes.PENCIL) {
+    canvas.off('mouse:down');
+    canvas.off('mouse:move');
+    canvas.off('mouse:up');
+
     options.currentMode = modes.PENCIL;
     canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
     canvas.freeDrawingBrush.width = options.currentWidth;
