@@ -300,7 +300,11 @@ const stopDrawingTriangle = () => {
 };
 
 const createText = (canvas) => {
+  canvas.off('mouse:down');
+  canvas.off('mouse:move');
+  canvas.off('mouse:up');
   canvas.isDrawingMode = false;
+
   const text = new fabric.Textbox('text', {
     left: 100,
     top: 100,
@@ -417,7 +421,6 @@ const Whiteboard = () => {
   };
 
   const changeFill = (e) => {
-    console.log(e);
     options.fill = e.checked;
     setIsFill(() => e.checked);
   };
