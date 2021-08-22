@@ -3,6 +3,7 @@ import { fabric } from 'fabric';
 import { FileUpload } from 'primereact/fileupload';
 import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
+import { saveAs } from 'file-saver';
 
 import './eraserBrush';
 
@@ -388,6 +389,7 @@ const Whiteboard = () => {
   const [canvasJSON, setCanvasJSON] = useState(null);
   const [isFill, setIsFill] = useState(false);
   const fileUploadRef = useRef(null);
+  const canvasRef = useRef(null);
 
   useEffect(() => {
     setCanvas(() => initCanvas());
@@ -435,6 +437,12 @@ const Whiteboard = () => {
   const changeFill = (e) => {
     options.fill = e.checked;
     setIsFill(() => e.checked);
+  };
+
+  const onSaveCanvasAsImage = () => {
+    canvasRef.current.toBlob(function (blob) {
+      saveAs(blob, 'image.png');
+    });
   };
 
   return (
@@ -531,8 +539,13 @@ const Whiteboard = () => {
           mode="basic"
           chooseLabel="Upload PDF"
         />
+        <Button
+          label="save as image"
+          className="p-button-info p-button-rounded p-button-outlined"
+          onClick={onSaveCanvasAsImage}
+        />
       </div>
-      <canvas id="canvas" />
+      <canvas ref={canvasRef} id="canvas" />
     </div>
   );
 };
