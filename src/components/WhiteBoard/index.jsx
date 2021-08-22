@@ -329,6 +329,18 @@ const changeToErasingMode = (canvas) => {
   }
 };
 
+const onSelectMode = (canvas) => {
+  options.currentMode = '';
+  canvas.isDrawingMode = false;
+
+  canvas.off('mouse:down');
+  canvas.off('mouse:move');
+  canvas.off('mouse:up');
+
+  canvas.getObjects().map((item) => item.set({ selectable: true }));
+  canvas.hoverCursor = 'all-scroll';
+};
+
 const clearCanvas = (canvas) => {
   canvas.getObjects().forEach((item) => {
     if (item !== canvas.backgroundImage) {
@@ -467,6 +479,11 @@ const Whiteboard = () => {
           label="text"
           className="p-button-info p-button-rounded p-button-outlined"
           onClick={() => createText(canvas)}
+        />
+        <Button
+          label="select"
+          className="p-button-info p-button-rounded p-button-outlined"
+          onClick={() => onSelectMode(canvas)}
         />
         <input
           className="p-button-info p-button-rounded p-button-outlined"
