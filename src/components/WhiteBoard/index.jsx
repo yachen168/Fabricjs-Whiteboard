@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { fabric } from 'fabric';
 import { FileUpload } from 'primereact/fileupload';
 import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
+import PdfReader from '../PdfReader';
 import { saveAs } from 'file-saver';
 
 import './eraserBrush';
@@ -139,6 +141,13 @@ const startAddRect = (canvas) => {
     });
 
     canvas.add(drawInstance);
+
+    drawInstance.on('mousedown', (e) => {
+      if (options.currentMode === modes.ERASER) {
+        console.log('刪除', e);
+        canvas.remove(e.target);
+      }
+    });
   };
 };
 
@@ -379,12 +388,13 @@ const draw = (canvas) => {
 
     options.currentMode = modes.PENCIL;
     canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
-    canvas.freeDrawingBrush.width = options.currentWidth;
+    canvas.freeDrawingBrush.width = parseInt(options.currentWidth, 10) || 1;
     canvas.isDrawingMode = true;
   }
 };
 
 const Whiteboard = () => {
+  const { fileReader } = useSelector((state) => state);
   const [canvas, setCanvas] = useState(null);
   const [canvasJSON, setCanvasJSON] = useState(null);
   const [isFill, setIsFill] = useState(false);
@@ -394,6 +404,34 @@ const Whiteboard = () => {
   useEffect(() => {
     setCanvas(() => initCanvas());
   }, []);
+
+  useEffect(() => {
+    if (canvas) {
+      const center = canvas.getCenter();
+      fabric.Image.fromURL(fileReader.currentPage, (img) => {
+        const imgWidth = img.getBoundingRect().width;
+        const imgHeight = img.getBoundingRect().height;
+
+        // 判斷 pdf 橫直向
+        if (imgWidth > imgHeight) {
+          img.scaleToWidth(canvas.width);
+        }
+
+        if (imgWidth < imgHeight) {
+          img.scaleToHeight(canvas.height);
+        }
+
+        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+          top: center.top,
+          left: center.left,
+          originX: 'center',
+          originY: 'center',
+        });
+
+        canvas.renderAll();
+      });
+    }
+  }, [fileReader.currentPage]);
 
   useEffect(() => {
     if (canvas) {
@@ -528,17 +566,7 @@ const Whiteboard = () => {
           auto
           chooseLabel="Upload Image"
         />
-        <FileUpload
-          ref={fileUploadRef}
-          multiple={false}
-          name="demo[]"
-          url="https://primefaces.org/primereact/showcase/upload.php"
-          onUpload={uploadPdf}
-          accept=".pdf"
-          chooseOptions={chooseOptions}
-          mode="basic"
-          chooseLabel="Upload PDF"
-        />
+
         <Button
           label="save as image"
           className="p-button-info p-button-rounded p-button-outlined"
@@ -546,6 +574,7 @@ const Whiteboard = () => {
         />
       </div>
       <canvas ref={canvasRef} id="canvas" />
+      <PdfReader />
     </div>
   );
 };

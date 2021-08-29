@@ -1,0 +1,1 @@
+export const SET_FILE_READER_INFO = 'SET_FILE_READER_INFO';
