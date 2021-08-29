@@ -14,6 +14,7 @@ import { ReactComponent as LineIcon } from './images/line.svg';
 import { ReactComponent as EllipseIcon } from './images/ellipse.svg';
 import { ReactComponent as TriangleIcon } from './images/triangle.svg';
 import { ReactComponent as PencilIcon } from './images/pencil.svg';
+import { ReactComponent as SweepingIcon } from './images/sweeping.svg';
 
 import './eraserBrush';
 
@@ -458,8 +459,6 @@ const Whiteboard = () => {
     reader.readAsDataURL(file);
   };
 
-  const uploadPdf = () => {};
-
   const changeCurrentWidth = (e) => {
     options.currentWidth = parseInt(e.target.value);
     canvas.freeDrawingBrush.width = parseInt(e.target.value);
@@ -517,7 +516,7 @@ const Whiteboard = () => {
         <Checkbox id="fill" checked={isFill} onChange={changeFill} />
         <label htmlFor="fill">fill</label>
         <button className="p-button-info p-button-rounded" onClick={() => clearCanvas(canvas)}>
-          Clear all
+          <SweepingIcon />
         </button>
         <button className="p-button-info p-button-rounded" onClick={() => canvasToJson(canvas)}>
           To Json
