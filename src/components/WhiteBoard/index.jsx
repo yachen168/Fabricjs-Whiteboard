@@ -33,7 +33,7 @@ let mouseDown = false;
 const options = {
   currentMode: '',
   currentColor: '#000000',
-  currentWidth: 1,
+  currentWidth: 5,
   fill: false,
   group: {},
 };
@@ -396,7 +396,7 @@ const Whiteboard = () => {
   const { fileReader } = useSelector((state) => state);
   const [canvas, setCanvas] = useState(null);
   const [canvasJSON, setCanvasJSON] = useState(null);
-  const [brushWidth, setBrushWidth] = useState(1);
+  const [brushWidth, setBrushWidth] = useState(5);
   const [isFill, setIsFill] = useState(false);
   const fileUploadRef = useRef(null);
   const canvasRef = useRef(null);
