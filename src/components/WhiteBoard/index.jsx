@@ -6,15 +6,22 @@ import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
 import PdfReader from '../PdfReader';
 import { saveAs } from 'file-saver';
+import { ReactComponent as SelectIcon } from './images/select.svg';
+import { ReactComponent as EraserIcon } from './images/eraser.svg';
+import { ReactComponent as TextIcon } from './images/text.svg';
+import { ReactComponent as RectangleIcon } from './images/rectangle.svg';
+import { ReactComponent as LineIcon } from './images/line.svg';
+import { ReactComponent as EllipseIcon } from './images/ellipse.svg';
+import { ReactComponent as TriangleIcon } from './images/triangle.svg';
+import { ReactComponent as PencilIcon } from './images/pencil.svg';
 
 import './eraserBrush';
 
 import styles from './index.module.scss';
 
 const chooseOptions = {
-  icon: 'pi pi-fw pi-plus',
+  icon: 'pi pi-upload',
   iconOnly: false,
-  className: 'custom-upload-btn p-button-info p-button-rounded p-button-outlined',
 };
 
 let drawInstance = null;
@@ -359,15 +366,6 @@ const clearCanvas = (canvas) => {
   });
 };
 
-const createBackgroundImage = (imageUrl, canvas) => {
-  fabric.Image.fromURL(imageUrl, (img) => {
-    img.scaleToWidth(canvas.width);
-    img.scaleToHeight(canvas.height);
-    canvas.setBackgroundImage(img);
-    canvas.renderAll();
-  });
-};
-
 const canvasFromJson = (canvas) => {
   const data = JSON.parse(
     '{"version":"4.3.1","objects":[{"type":"circle","version":"4.3.1","originX":"left","originY":"top","left":100,"top":100,"width":40,"height":40,"fill":"rgba(255, 255, 255, 0.0)","stroke":"#000000","strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"radius":20,"startAngle":0,"endAngle":6.283185307179586},{"type":"text","version":"4.3.1","originX":"left","originY":"top","left":253,"top":102,"width":95.55,"height":18.08,"fill":"#000000","stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":2.43,"scaleY":2.43,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"text":"Some text","fontSize":16,"fontWeight":"normal","fontFamily":"Arial","fontStyle":"normal","lineHeight":1.16,"underline":false,"overline":false,"linethrough":false,"textAlign":"left","textBackgroundColor":"","charSpacing":0,"minWidth":20,"splitByGrapheme":false,"styles":{}},{"type":"rect","version":"4.3.1","originX":"left","originY":"top","left":109,"top":212,"width":40,"height":40,"fill":"rgba(255, 255, 255, 0.0)","stroke":"#000000","strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"rx":0,"ry":0},{"type":"image","version":"4.3.1","originX":"left","originY":"top","left":499,"top":86,"width":1200,"height":900,"fill":"rgb(0,0,0)","stroke":null,"strokeWidth":0,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":0.2,"scaleY":0.2,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"cropX":0,"cropY":0,"src":"https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg","crossOrigin":null,"filters":[]},{"type":"polyline","version":"4.3.1","originX":"left","originY":"top","left":483.78,"top":339.22,"width":50.88,"height":50.88,"fill":"white","stroke":"black","strokeWidth":2,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":262.52,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"points":[{"x":100,"y":100},{"x":99.11611652351681,"y":100.88388347648318},{"x":145.58058261758407,"y":147.34834957055045},{"x":142.92893218813452,"y":150},{"x":150,"y":150},{"x":150,"y":142.92893218813452},{"x":147.34834957055045,"y":145.58058261758407},{"x":100.88388347648318,"y":99.11611652351681},{"x":100,"y":100}]},{"type":"image","version":"4.3.1","originX":"left","originY":"top","left":197,"top":132,"width":1200,"height":900,"fill":"rgb(0,0,0)","stroke":null,"strokeWidth":0,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":false,"strokeMiterLimit":4,"scaleX":0.2,"scaleY":0.2,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"cropX":0,"cropY":0,"src":"https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg","crossOrigin":null,"filters":[]}]}'
@@ -486,74 +484,47 @@ const Whiteboard = () => {
   return (
     <div className={styles.whiteboard}>
       <div className={styles.toolbar}>
-        <Button
-          label="line"
-          className="p-button-info p-button-rounded p-button-outlined"
-          onClick={() => createLine(canvas)}
-        />
-        <Button
-          label="rectangle"
-          className="p-button-info p-button-rounded p-button-outlined"
-          onClick={() => createRect(canvas)}
-        />
-        <Button
-          label="ellipse"
-          className="p-button-info p-button-rounded p-button-outlined"
-          onClick={() => createEllipse(canvas)}
-        />
-        <Button
-          label="triangle"
-          className="p-button-info p-button-rounded p-button-outlined"
-          onClick={() => createTriangle(canvas, options)}
-        />
-        <Button
-          label="image"
-          className="p-button-info p-button-rounded p-button-outlined"
-          onClick={() => createBackgroundImage('https://i.imgur.com/MFdYlTH.png', canvas)}
-        />
-        <Button
-          label="pencil"
-          className="p-button-info p-button-rounded p-button-outlined"
-          onClick={() => draw(canvas)}
-        />
-        <Button
-          label="eraser"
-          className="p-button-info p-button-rounded p-button-outlined"
-          onClick={() => changeToErasingMode(canvas)}
-        />
-        <Button
-          label="text"
-          className="p-button-info p-button-rounded p-button-outlined"
-          onClick={() => createText(canvas)}
-        />
-        <Button
-          label="select"
-          className="p-button-info p-button-rounded p-button-outlined"
-          onClick={() => onSelectMode(canvas)}
-        />
+        <button className="p-button-info" onClick={() => createLine(canvas)}>
+          <LineIcon />
+        </button>
+        <button className="p-button-info" onClick={() => createRect(canvas)}>
+          <RectangleIcon />
+        </button>
+        <button className="p-button-info" onClick={() => createEllipse(canvas)}>
+          <EllipseIcon />
+        </button>
+        <button className="p-button-info" onClick={() => createTriangle(canvas, options)}>
+          <TriangleIcon />
+        </button>
+        <button icon="pi pi-pencil" className="p-button-info" onClick={() => draw(canvas)}>
+          <PencilIcon />
+        </button>
+        <button className="p-button-info" onClick={() => changeToErasingMode(canvas)}>
+          <EraserIcon />
+        </button>
+        <button className="p-button-secondary" onClick={() => createText(canvas)}>
+          <TextIcon />
+        </button>
+        <button className="p-button-secondary" onClick={() => onSelectMode(canvas)}>
+          <SelectIcon />
+        </button>
         <input
-          className="p-button-info p-button-rounded p-button-outlined"
+          className="p-button-info p-button-rounded"
           type="color"
           onChange={changeCurrentColor}
         />
         <input type="range" min={1} max={20} step={1} onChange={changeCurrentWidth} />
         <Checkbox id="fill" checked={isFill} onChange={changeFill} />
         <label htmlFor="fill">fill</label>
-        <Button
-          label="clear all"
-          className="p-button-info p-button-rounded p-button-outlined"
-          onClick={() => clearCanvas(canvas)}
-        />
-        <Button
-          label="To Json"
-          className="p-button-info p-button-rounded p-button-outlined"
-          onClick={() => canvasToJson(canvas)}
-        />
-        <Button
-          label="From Json"
-          className="p-button-info p-button-rounded p-button-outlined"
-          onClick={() => canvasFromJson(canvas)}
-        />
+        <button className="p-button-info p-button-rounded" onClick={() => clearCanvas(canvas)}>
+          Clear all
+        </button>
+        <button className="p-button-info p-button-rounded" onClick={() => canvasToJson(canvas)}>
+          To Json
+        </button>
+        <button className="p-button-info p-button-rounded" onClick={() => canvasFromJson(canvas)}>
+          From Json
+        </button>
         <FileUpload
           ref={fileUploadRef}
           multiple={false}
@@ -564,14 +535,16 @@ const Whiteboard = () => {
           chooseOptions={chooseOptions}
           mode="basic"
           auto
-          chooseLabel="Upload Image"
+          chooseLabel="Image"
         />
 
-        <Button
-          label="save as image"
-          className="p-button-info p-button-rounded p-button-outlined"
+        <button
+          icon="pi pi-download"
+          className="p-button-info p-button-rounded"
           onClick={onSaveCanvasAsImage}
-        />
+        >
+          save as image
+        </button>
       </div>
       <canvas ref={canvasRef} id="canvas" />
       <PdfReader />
