@@ -33,7 +33,7 @@ let mouseDown = false;
 const options = {
   currentMode: '',
   currentColor: '#000000',
-  currentWidth: 5,
+  currentWidth: 1,
   fill: false,
   group: {},
 };
@@ -396,6 +396,7 @@ const Whiteboard = () => {
   const { fileReader } = useSelector((state) => state);
   const [canvas, setCanvas] = useState(null);
   const [canvasJSON, setCanvasJSON] = useState(null);
+  const [brushWidth, setBrushWidth] = useState(1);
   const [isFill, setIsFill] = useState(false);
   const fileUploadRef = useRef(null);
   const canvasRef = useRef(null);
@@ -460,8 +461,10 @@ const Whiteboard = () => {
   };
 
   const changeCurrentWidth = (e) => {
-    options.currentWidth = parseInt(e.target.value);
-    canvas.freeDrawingBrush.width = parseInt(e.target.value);
+    const intValue = parseInt(e.target.value);
+    options.currentWidth = intValue;
+    canvas.freeDrawingBrush.width = intValue;
+    setBrushWidth(() => intValue);
   };
 
   const changeCurrentColor = (e) => {
@@ -512,7 +515,14 @@ const Whiteboard = () => {
           type="color"
           onChange={changeCurrentColor}
         />
-        <input type="range" min={1} max={20} step={1} onChange={changeCurrentWidth} />
+        <input
+          type="range"
+          min={1}
+          max={20}
+          step={1}
+          value={brushWidth}
+          onChange={changeCurrentWidth}
+        />
         <Checkbox id="fill" checked={isFill} onChange={changeFill} />
         <label htmlFor="fill">fill</label>
         <button className="p-button-info p-button-rounded" onClick={() => clearCanvas(canvas)}>
