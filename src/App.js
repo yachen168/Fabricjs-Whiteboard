@@ -1,12 +1,11 @@
 import React from 'react';
-import Whiteboard from './components/WhiteBoard';
-
+import Home from './views/Home';
 import styles from './app.module.scss';
 
 const App = () => {
   return (
     <div className={styles.app}>
-      <Whiteboard />
+      <Home />
     </div>
   );
 };
