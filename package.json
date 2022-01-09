@@ -1,8 +1,27 @@
 {
-  "name": "fabricjs-whiteboard",
+  "name": "react-whiteboard",
   "version": "0.1.0",
-  "private": true,
+  "description": "Whiteboard & PDF reader",
+  "author": "Yachen168",
+  "private": false,
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "keywords": [
+    "react-whiteboard",
+    "whiteboard",
+    "fabricjs",
+    "pdf"
+  ],
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yachen168/Fabricjs-Whiteboard.git"
+  },
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -27,12 +46,15 @@
     "web-vitals": "^1.0.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.16.7",
+    "@babel/core": "^7.16.7",
+    "@babel/preset-env": "^7.16.7",
     "eslint": "^7.20.0",
     "eslint-plugin-react": "^7.22.0"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "rm -rf dist && NODE_ENV=production babel src/lib --out-dir dist --copy-files",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

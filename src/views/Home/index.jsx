@@ -1,5 +1,5 @@
 import React from 'react';
-import Whiteboard from '../../components/WhiteBoard';
+import Whiteboard from '../../lib/components/WhiteBoard';
 
 const Home = () => {
   return <Whiteboard />;

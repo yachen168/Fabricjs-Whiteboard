@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
-import { setFileReaderInfo } from '../../actions/fileReader';
+import { setFileReaderInfo } from '../../../actions/fileReader';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 
 import { pdfjs } from 'react-pdf';
