@@ -496,7 +496,7 @@ const Whiteboard = () => {
 
   const uploadImage = e => {
     const reader = new FileReader();
-    const file = e.files[0];
+    const file = e.target.files[0];
     reader.addEventListener('load', () => {
       _fabric.fabric.Image.fromURL(reader.result, img => {
         canvas.add(img);
@@ -580,25 +580,21 @@ const Whiteboard = () => {
   }, /*#__PURE__*/_react.default.createElement(_sweeping.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
     className: "p-button-info p-button-rounded",
     onClick: () => canvasToJson(canvas)
-  }, "To Json"), /*#__PURE__*/_react.default.createElement(_fileupload.FileUpload, {
-    ref: fileUploadRef,
-    multiple: false,
-    name: "demo[]",
-    url: "https://primefaces.org/primereact/showcase/upload.php",
-    onUpload: uploadImage,
-    accept: "image/*",
-    chooseOptions: chooseOptions,
-    mode: "basic",
-    auto: true,
-    chooseLabel: "Image"
-  }), /*#__PURE__*/_react.default.createElement("button", {
+  }, "To Json"), /*#__PURE__*/_react.default.createElement("button", {
     icon: "pi pi-download",
     className: "p-button-info p-button-rounded",
     onClick: onSaveCanvasAsImage
   }, "save as image")), /*#__PURE__*/_react.default.createElement("canvas", {
     ref: canvasRef,
     id: "canvas"
-  }), /*#__PURE__*/_react.default.createElement(_PdfReader.default, null));
+  }), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("label", {
+    htmlFor: "uploadImage"
+  }, "Upload image\uFF1A"), /*#__PURE__*/_react.default.createElement("input", {
+    id: "uploadImage",
+    accept: "image/*",
+    type: "file",
+    onChange: uploadImage
+  })), /*#__PURE__*/_react.default.createElement(_PdfReader.default, null));
 };
 
 var _default = Whiteboard;

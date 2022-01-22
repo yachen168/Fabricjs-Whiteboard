@@ -441,7 +441,7 @@ const Whiteboard = () => {
 
   const uploadImage = (e) => {
     const reader = new FileReader();
-    const file = e.files[0];
+    const file = e.target.files[0];
 
     reader.addEventListener('load', () => {
       fabric.Image.fromURL(reader.result, (img) => {
@@ -523,19 +523,6 @@ const Whiteboard = () => {
         <button className="p-button-info p-button-rounded" onClick={() => canvasToJson(canvas)}>
           To Json
         </button>
-        <FileUpload
-          ref={fileUploadRef}
-          multiple={false}
-          name="demo[]"
-          url="https://primefaces.org/primereact/showcase/upload.php"
-          onUpload={uploadImage}
-          accept="image/*"
-          chooseOptions={chooseOptions}
-          mode="basic"
-          auto
-          chooseLabel="Image"
-        />
-
         <button
           icon="pi pi-download"
           className="p-button-info p-button-rounded"
@@ -545,6 +532,10 @@ const Whiteboard = () => {
         </button>
       </div>
       <canvas ref={canvasRef} id="canvas" />
+      <div>
+        <label htmlFor="uploadImage">Upload image：</label>
+        <input id="uploadImage" accept="image/*" type="file" onChange={uploadImage} />
+      </div>
       <PdfReader />
     </div>
   );
