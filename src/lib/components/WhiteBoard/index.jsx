@@ -47,11 +47,7 @@ const modes = {
   ERASER: 'ERASER',
 };
 
-const initCanvas = () =>
-  new fabric.Canvas('canvas', {
-    height: 600,
-    width: 800,
-  });
+const initCanvas = () => new fabric.Canvas('canvas', { height: 600, width: 800 });
 
 /*  ==== line  ==== */
 const createLine = (canvas) => {
