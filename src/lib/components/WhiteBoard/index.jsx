@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { fabric } from 'fabric';
-import { FileUpload } from 'primereact/fileupload';
 import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
 import PdfReader from '../PdfReader';
@@ -47,7 +46,18 @@ const modes = {
   ERASER: 'ERASER',
 };
 
-const initCanvas = () => new fabric.Canvas('canvas', { height: 600, width: 800 });
+const initCanvas = () => {
+  const canvas = new fabric.Canvas('canvas', { height: 600, width: 800 });
+  fabric.Object.prototype.transparentCorners = false;
+  fabric.Object.prototype.cornerStyle = 'circle';
+  fabric.Object.prototype.borderColor = '#4447A9';
+  fabric.Object.prototype.cornerColor = '#4447A9';
+  fabric.Object.prototype.cornerSize = 6;
+  fabric.Object.prototype.padding = 10;
+  fabric.Object.prototype.borderDashArray = [5, 5];
+
+  return canvas;
+};
 
 /*  ==== line  ==== */
 const createLine = (canvas) => {
@@ -140,10 +150,8 @@ const startAddRect = (canvas) => {
       top: origY,
       width: 0,
       height: 0,
-      selectionBackgroundColor: 'rgba(245, 245, 220, 0.5)',
       selectable: false,
     });
-
     canvas.add(drawInstance);
 
     drawInstance.on('mousedown', (e) => {
@@ -216,10 +224,8 @@ const startAddEllipse = (canvas) => {
       top: origY,
       cornerSize: 7,
       objectCaching: false,
-      selectionBackgroundColor: 'rgba(245, 245, 220, 0.5)',
       selectable: false,
     });
-
     canvas.add(drawInstance);
   };
 };
@@ -281,10 +287,8 @@ const startAddTriangle = (canvas) => {
       top: origY,
       width: 0,
       height: 0,
-      selectionBackgroundColor: 'rgba(245, 245, 220, 0.5)',
       selectable: false,
     });
-
     canvas.add(drawInstance);
   };
 };
@@ -303,6 +307,7 @@ const startDrawingTriangle = (canvas) => {
         width: Math.abs(pointer.x - origX),
         height: Math.abs(pointer.y - origY),
       });
+
       drawInstance.setCoords();
       canvas.renderAll();
     }
