@@ -386,7 +386,6 @@ const Whiteboard = () => {
   const [canvasJSON, setCanvasJSON] = useState(null);
   const [brushWidth, setBrushWidth] = useState(5);
   const [isFill, setIsFill] = useState(false);
-  const fileUploadRef = useRef(null);
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -397,18 +396,7 @@ const Whiteboard = () => {
     if (canvas) {
       const center = canvas.getCenter();
       fabric.Image.fromURL(fileReader.currentPage, (img) => {
-        const imgWidth = img.getBoundingRect().width;
-        const imgHeight = img.getBoundingRect().height;
-
-        // 判斷 pdf 橫直向
-        if (imgWidth > imgHeight) {
-          img.scaleToWidth(canvas.width);
-        }
-
-        if (imgWidth < imgHeight) {
-          img.scaleToHeight(canvas.height);
-        }
-
+        img.scaleToHeight(canvas.height);
         canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
           top: center.top,
           left: center.left,
@@ -441,6 +429,7 @@ const Whiteboard = () => {
 
     reader.addEventListener('load', () => {
       fabric.Image.fromURL(reader.result, (img) => {
+        img.scaleToHeight(canvas.height);
         canvas.add(img);
       });
     });
