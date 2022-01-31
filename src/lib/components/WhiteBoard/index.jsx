@@ -19,11 +19,6 @@ import './eraserBrush';
 
 import styles from './index.module.scss';
 
-const chooseOptions = {
-  icon: 'pi pi-upload',
-  iconOnly: false,
-};
-
 let drawInstance = null;
 let origX;
 let origY;

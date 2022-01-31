@@ -1,6 +1,6 @@
 {
   "name": "react-fabricjs-whiteboard",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Whiteboard & PDF reader",
   "author": "Yachen168",
   "private": false,
@@ -25,11 +25,8 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "axios": "^0.21.1",
     "fabric": "^4.5.1",
-    "fabricjs-react": "^1.0.8",
     "file-saver": "^2.0.5",
-    "js-cookie": "^2.2.1",
     "primeflex": "^2.0.0",
     "primeicons": "^4.1.0",
     "primereact": "^7.2.0",
@@ -49,6 +46,13 @@
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-react": "^7.22.0"
+  },
+  "peerDependencies": {
+    "primeflex": "^2.0.0",
+    "primeicons": "^4.1.0",
+    "primereact": "^7.2.0",
+    "fabric": "^4.5.1",
+    "file-saver": "^2.0.5"
   },
   "scripts": {
     "start": "react-scripts start",
