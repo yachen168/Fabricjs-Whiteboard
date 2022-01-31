@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { fabric } from 'fabric';
 import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
@@ -7,7 +6,6 @@ import { Menu } from 'primereact/menu';
 import { ColorPicker } from 'primereact/colorpicker';
 import PdfReader from '../PdfReader';
 import { saveAs } from 'file-saver';
-import { setFileReaderInfo } from '../../../actions/fileReader';
 import { ReactComponent as SelectIcon } from './images/select.svg';
 import { ReactComponent as EraserIcon } from './images/eraser.svg';
 import { ReactComponent as TextIcon } from './images/text.svg';
@@ -388,12 +386,16 @@ const draw = (canvas) => {
 };
 
 const Whiteboard = () => {
-  const dispatch = useDispatch();
-  const { fileReader } = useSelector((state) => state);
   const [canvas, setCanvas] = useState(null);
   const [canvasJSON, setCanvasJSON] = useState(null);
   const [brushWidth, setBrushWidth] = useState(5);
   const [isFill, setIsFill] = useState(false);
+  const [fileReaderInfo, setFileReaderInfo] = useState({
+    file: '',
+    totalPages: null,
+    currentPageNumber: 1,
+    currentPage: '',
+  });
   const canvasRef = useRef(null);
   const menuRef = useRef(null);
   const uploadImageRef = useRef(null);
@@ -424,7 +426,7 @@ const Whiteboard = () => {
   useEffect(() => {
     if (canvas) {
       const center = canvas.getCenter();
-      fabric.Image.fromURL(fileReader.currentPage, (img) => {
+      fabric.Image.fromURL(fileReaderInfo.currentPage, (img) => {
         img.scaleToHeight(canvas.height);
         canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
           top: center.top,
@@ -436,7 +438,7 @@ const Whiteboard = () => {
         canvas.renderAll();
       });
     }
-  }, [fileReader.currentPage]);
+  }, [fileReaderInfo.currentPage]);
 
   useEffect(() => {
     if (canvas) {
@@ -490,7 +492,11 @@ const Whiteboard = () => {
   };
 
   const onFileChange = (event) => {
-    dispatch(setFileReaderInfo({ file: event.target.files[0], currentPageNumber: 1 }));
+    updateFileReaderInfo({ file: event.target.files[0], currentPageNumber: 1 });
+  };
+
+  const updateFileReaderInfo = (data) => {
+    setFileReaderInfo({ ...fileReaderInfo, ...data });
   };
 
   return (
@@ -626,7 +632,7 @@ const Whiteboard = () => {
       </div>
       <canvas ref={canvasRef} id="canvas" />
       <div>
-        <PdfReader />
+        <PdfReader fileReaderInfo={fileReaderInfo} updateFileReaderInfo={updateFileReaderInfo} />
       </div>
     </div>
   );

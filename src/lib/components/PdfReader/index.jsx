@@ -1,7 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
-import { setFileReaderInfo } from '../../../actions/fileReader';
 import { Button } from 'primereact/button';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 
@@ -10,23 +8,20 @@ import styles from './index.module.scss';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-function PDFReader() {
-  const dispatch = useDispatch();
-  const { fileReader } = useSelector((state) => state);
-
+function PDFReader({ fileReaderInfo, updateFileReaderInfo }) {
   const onRenderSuccess = () => {
     const importPDFCanvas = document.querySelector('.import-pdf-page canvas');
     const pdfAsImageSrc = importPDFCanvas.toDataURL();
 
-    dispatch(setFileReaderInfo({ currentPage: pdfAsImageSrc }));
+    updateFileReaderInfo({ currentPage: pdfAsImageSrc });
   };
 
   const onDocumentLoadSuccess = ({ numPages }) => {
-    dispatch(setFileReaderInfo({ totalPages: numPages }));
+    updateFileReaderInfo({ totalPages: numPages });
   };
 
   const changePage = (offset) => {
-    dispatch(setFileReaderInfo({ currentPageNumber: fileReader.currentPageNumber + offset }));
+    updateFileReaderInfo({ currentPageNumber: fileReaderInfo.currentPageNumber + offset });
   };
 
   const nextPage = () => changePage(1);
@@ -37,7 +32,7 @@ function PDFReader() {
       <div className={styles.fileContainer}>
         <Document
           className={styles.document}
-          file={fileReader.file}
+          file={fileReaderInfo.file}
           onLoadSuccess={onDocumentLoadSuccess}
           onLoadProgress={({ loaded, total }) =>
             console.log('Loading a document: ' + (loaded / total) * 100 + '%')
@@ -46,19 +41,19 @@ function PDFReader() {
           <Page
             className="import-pdf-page"
             onRenderSuccess={onRenderSuccess}
-            pageNumber={fileReader.currentPageNumber}
+            pageNumber={fileReaderInfo.currentPageNumber}
           />
         </Document>
       </div>
       <div className={styles.pageInfo}>
         <span>
-          Page {fileReader.currentPageNumber} of {fileReader.totalPages || '--'}
+          Page {fileReaderInfo.currentPageNumber} of {fileReaderInfo.totalPages || '--'}
         </span>
         <Button
           className="p-button-info p-button-text"
           type="button"
           label="< Previous"
-          disabled={fileReader.currentPageNumber <= 1}
+          disabled={fileReaderInfo.currentPageNumber <= 1}
           onClick={previousPage}
         />
 
@@ -66,7 +61,7 @@ function PDFReader() {
           className="p-button-info p-button-text"
           type="button"
           label="Next >"
-          disabled={fileReader.currentPageNumber >= fileReader.totalPages}
+          disabled={fileReaderInfo.currentPageNumber >= fileReaderInfo.totalPages}
           onClick={nextPage}
         />
       </div>
