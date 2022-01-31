@@ -4,6 +4,7 @@ import { fabric } from 'fabric';
 import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
 import { Menu } from 'primereact/menu';
+import { ColorPicker } from 'primereact/colorpicker';
 import PdfReader from '../PdfReader';
 import { saveAs } from 'file-saver';
 import { setFileReaderInfo } from '../../../actions/fileReader';
@@ -473,8 +474,8 @@ const Whiteboard = () => {
   };
 
   const changeCurrentColor = (e) => {
-    options.currentColor = e.target.value;
-    canvas.freeDrawingBrush.color = e.target.value;
+    options.currentColor = `#${e.value}`;
+    canvas.freeDrawingBrush.color = `#${e.value}`;
   };
 
   const changeFill = (e) => {
@@ -580,11 +581,7 @@ const Whiteboard = () => {
           <Checkbox id="fill" checked={isFill} onChange={changeFill} />
           <label htmlFor="fill">fill</label>
         </div>
-        <input
-          className="p-button-info p-button-rounded"
-          type="color"
-          onChange={changeCurrentColor}
-        />
+        <ColorPicker format="hex" defaultColor="000000" onChange={changeCurrentColor}></ColorPicker>
         <input
           type="range"
           min={1}
