@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 Object.defineProperty(exports, "Whiteboard", {
   enumerable: true,
   get: function get() {
-    return _WhiteBoard.default;
+    return _Whiteboard.default;
   }
 });
 
-var _WhiteBoard = _interopRequireDefault(require("./WhiteBoard"));
+var _Whiteboard = _interopRequireDefault(require("./Whiteboard"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

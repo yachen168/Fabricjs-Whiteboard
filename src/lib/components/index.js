@@ -1,3 +1,3 @@
-import Whiteboard from './WhiteBoard';
+import Whiteboard from './Whiteboard';
 
 export { Whiteboard };
