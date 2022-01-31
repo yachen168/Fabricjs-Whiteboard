@@ -9,10 +9,6 @@ var _react = _interopRequireDefault(require("react"));
 
 var _entry = require("react-pdf/dist/esm/entry.webpack");
 
-var _button = require("primereact/button");
-
-require("react-pdf/dist/esm/Page/AnnotationLayer.css");
-
 var _reactPdf = require("react-pdf");
 
 var _indexModule = _interopRequireDefault(require("./index.module.scss"));
@@ -75,19 +71,15 @@ function PDFReader(_ref) {
     pageNumber: fileReaderInfo.currentPageNumber
   }))), /*#__PURE__*/_react.default.createElement("div", {
     className: _indexModule.default.pageInfo
-  }, /*#__PURE__*/_react.default.createElement("span", null, "Page ", fileReaderInfo.currentPageNumber, " of ", fileReaderInfo.totalPages || '--'), /*#__PURE__*/_react.default.createElement(_button.Button, {
-    className: "p-button-info p-button-text",
+  }, /*#__PURE__*/_react.default.createElement("span", null, "Page ", fileReaderInfo.currentPageNumber, " of ", fileReaderInfo.totalPages || '--'), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    label: "< Previous",
     disabled: fileReaderInfo.currentPageNumber <= 1,
     onClick: previousPage
-  }), /*#__PURE__*/_react.default.createElement(_button.Button, {
-    className: "p-button-info p-button-text",
+  }, "Previous"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    label: "Next >",
     disabled: fileReaderInfo.currentPageNumber >= fileReaderInfo.totalPages,
     onClick: nextPage
-  })));
+  }, "Next")));
 }
 
 var _default = PDFReader;

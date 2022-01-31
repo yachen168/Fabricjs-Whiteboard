@@ -8,27 +8,30 @@
 button {
   padding: 12px;
   margin: 1px;
-  background-color: #e2ebef;
+  background-color: #6366f1;
   border-radius: 3px;
+  color: #fff;
   border: none;
   outline: none;
   cursor: pointer;
 
   &:hover {
-    background-color: #d5e4eb;
+    background-color: #5658ec;
   }
 }
 
 .uploadInput {
   position: relative;
   width: fit-content;
-  height: 28px;
-  margin: 0 5px;
+  height: 38px;
+  margin: 0 1px;
+  padding: 0 5px;
   overflow: hidden;
   border-radius: 3px;
 
   input {
     height: 100%;
+    cursor: pointer;
   }
 
   label {
@@ -38,12 +41,12 @@ button {
     left: 0;
     bottom: 0;
     right: 0;
-    line-height: 28px;
+    line-height: 38px;
     margin: auto;
     text-align: center;
-    font-size: 15px;
+    font-size: 14px;
     color: #fff;
     background-color: #9c27b0;
-    cursor: pointer;
+    pointer-events: none;
   }
 }

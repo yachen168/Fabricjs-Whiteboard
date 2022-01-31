@@ -17,14 +17,6 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _fabric = require("fabric");
 
-var _button = require("primereact/button");
-
-var _checkbox = require("primereact/checkbox");
-
-var _menu = require("primereact/menu");
-
-var _colorpicker = require("primereact/colorpicker");
-
 var _PdfReader = _interopRequireDefault(require("../PdfReader"));
 
 var _fileSaver = require("file-saver");
@@ -530,13 +522,13 @@ const Whiteboard = () => {
   };
 
   const changeCurrentColor = e => {
-    options.currentColor = "#".concat(e.value);
-    canvas.freeDrawingBrush.color = "#".concat(e.value);
+    options.currentColor = e.target.value;
+    canvas.freeDrawingBrush.color = e.target.value;
   };
 
   const changeFill = e => {
-    options.fill = e.checked;
-    setIsFill(() => e.checked);
+    options.fill = e.target.checked;
+    setIsFill(() => e.target.checked);
   };
 
   const onSaveCanvasAsImage = () => {
@@ -560,130 +552,76 @@ const Whiteboard = () => {
     className: _indexModule.default.whiteboard
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: _indexModule.default.toolbar
-  }, /*#__PURE__*/_react.default.createElement(_button.Button, {
-    className: "p-button-help",
-    tooltip: "Line",
+  }, /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    tooltipOptions: {
-      position: 'bottom'
-    },
     onClick: () => createLine(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_line.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
-    className: "p-button-help",
-    tooltip: "Rectangle",
+  }, /*#__PURE__*/_react.default.createElement(_line.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    tooltipOptions: {
-      position: 'bottom'
-    },
     onClick: () => createRect(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_rectangle.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
-    className: "p-button-help",
-    tooltip: "Ellipse",
+  }, /*#__PURE__*/_react.default.createElement(_rectangle.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    tooltipOptions: {
-      position: 'bottom'
-    },
     onClick: () => createEllipse(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_ellipse.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
-    className: "p-button-help",
-    tooltip: "Triangle",
+  }, /*#__PURE__*/_react.default.createElement(_ellipse.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    tooltipOptions: {
-      position: 'bottom'
-    },
     onClick: () => createTriangle(canvas, options)
-  }, /*#__PURE__*/_react.default.createElement(_triangle.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
-    className: "p-button-help",
-    tooltip: "Pencil",
+  }, /*#__PURE__*/_react.default.createElement(_triangle.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    tooltipOptions: {
-      position: 'bottom'
-    },
     onClick: () => draw(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_pencil.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
-    className: "p-button-help",
-    tooltip: "Text",
+  }, /*#__PURE__*/_react.default.createElement(_pencil.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    tooltipOptions: {
-      position: 'bottom'
-    },
     onClick: () => createText(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_text.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
-    className: "p-button-help",
-    tooltip: "Selection mode",
+  }, /*#__PURE__*/_react.default.createElement(_text.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    tooltipOptions: {
-      position: 'bottom'
-    },
     onClick: () => onSelectMode(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_select.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
-    className: "p-button-help",
-    tooltip: "Eraser",
+  }, /*#__PURE__*/_react.default.createElement(_select.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    tooltipOptions: {
-      position: 'bottom'
-    },
     onClick: () => changeToErasingMode(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_eraser.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
-    className: "p-button-help",
-    icon: "pi pi-trash",
-    tooltip: "Delete",
+  }, /*#__PURE__*/_react.default.createElement(_eraser.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    tooltipOptions: {
-      position: 'bottom'
-    },
     onClick: () => clearCanvas(canvas)
-  }), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_checkbox.Checkbox, {
+  }, "Delete"), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("input", {
+    type: "checkbox",
+    name: "fill",
     id: "fill",
     checked: isFill,
     onChange: changeFill
   }), /*#__PURE__*/_react.default.createElement("label", {
     htmlFor: "fill"
-  }, "fill")), /*#__PURE__*/_react.default.createElement(_colorpicker.ColorPicker, {
-    format: "hex",
-    defaultColor: "000000",
+  }, "fill")), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("input", {
+    type: "color",
+    name: "color",
+    id: "color",
     onChange: changeCurrentColor
-  }), /*#__PURE__*/_react.default.createElement("input", {
+  })), /*#__PURE__*/_react.default.createElement("input", {
     type: "range",
     min: 1,
     max: 20,
     step: 1,
     value: brushWidth,
     onChange: changeCurrentWidth
-  }), /*#__PURE__*/_react.default.createElement("input", {
+  }), /*#__PURE__*/_react.default.createElement("div", {
+    className: "uploadInput"
+  }, /*#__PURE__*/_react.default.createElement("label", {
+    htmlFor: "uploadImage"
+  }, "+Image"), /*#__PURE__*/_react.default.createElement("input", {
     ref: uploadImageRef,
-    className: "p-d-none",
     accept: "image/*",
     type: "file",
     onChange: uploadImage
-  }), /*#__PURE__*/_react.default.createElement("input", {
+  })), /*#__PURE__*/_react.default.createElement("div", {
+    className: "uploadInput"
+  }, /*#__PURE__*/_react.default.createElement("label", {
+    htmlFor: "uploadPDF"
+  }, "+PDF"), /*#__PURE__*/_react.default.createElement("input", {
     ref: uploadPdfRef,
-    className: "p-d-none",
     accept: ".pdf",
     type: "file",
     onChange: onFileChange
-  }), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_menu.Menu, {
-    model: items,
-    popup: true,
-    ref: menuRef,
-    id: "popup_menu"
-  }), /*#__PURE__*/_react.default.createElement(_button.Button, {
-    label: "Upload",
-    className: "p-button-help",
-    icon: "pi pi-cloud-upload",
-    onClick: event => menuRef.current.toggle(event),
-    "aria-controls": "popup_menu",
-    "aria-haspopup": true
-  })), /*#__PURE__*/_react.default.createElement(_button.Button, {
-    className: "p-button-help",
-    label: "To Json",
+  })), /*#__PURE__*/_react.default.createElement("button", {
     onClick: () => canvasToJson(canvas)
-  }), /*#__PURE__*/_react.default.createElement(_button.Button, {
-    className: "p-button-help",
-    label: "save as image",
-    icon: "pi pi-download",
+  }, "To Json"), /*#__PURE__*/_react.default.createElement("button", {
     onClick: onSaveCanvasAsImage
-  })), /*#__PURE__*/_react.default.createElement("canvas", {
+  }, "save as image")), /*#__PURE__*/_react.default.createElement("canvas", {
     ref: canvasRef,
     id: "canvas"
   }), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_PdfReader.default, {

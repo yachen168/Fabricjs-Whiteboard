@@ -1,9 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { fabric } from 'fabric';
-import { Button } from 'primereact/button';
-import { Checkbox } from 'primereact/checkbox';
-import { Menu } from 'primereact/menu';
-import { ColorPicker } from 'primereact/colorpicker';
 import PdfReader from '../PdfReader';
 import { saveAs } from 'file-saver';
 import { ReactComponent as SelectIcon } from './images/select.svg';
@@ -471,13 +467,13 @@ const Whiteboard = () => {
   };
 
   const changeCurrentColor = (e) => {
-    options.currentColor = `#${e.value}`;
-    canvas.freeDrawingBrush.color = `#${e.value}`;
+    options.currentColor = e.target.value;
+    canvas.freeDrawingBrush.color = e.target.value;
   };
 
   const changeFill = (e) => {
-    options.fill = e.checked;
-    setIsFill(() => e.checked);
+    options.fill = e.target.checked;
+    setIsFill(() => e.target.checked);
   };
 
   const onSaveCanvasAsImage = () => {
@@ -497,92 +493,40 @@ const Whiteboard = () => {
   return (
     <div className={styles.whiteboard}>
       <div className={styles.toolbar}>
-        <Button
-          className="p-button-help"
-          tooltip="Line"
-          type="button"
-          tooltipOptions={{ position: 'bottom' }}
-          onClick={() => createLine(canvas)}
-        >
+        <button type="button" onClick={() => createLine(canvas)}>
           <LineIcon />
-        </Button>
-        <Button
-          className="p-button-help"
-          tooltip="Rectangle"
-          type="button"
-          tooltipOptions={{ position: 'bottom' }}
-          onClick={() => createRect(canvas)}
-        >
+        </button>
+        <button type="button" onClick={() => createRect(canvas)}>
           <RectangleIcon />
-        </Button>
-        <Button
-          className="p-button-help"
-          tooltip="Ellipse"
-          type="button"
-          tooltipOptions={{ position: 'bottom' }}
-          onClick={() => createEllipse(canvas)}
-        >
+        </button>
+        <button type="button" onClick={() => createEllipse(canvas)}>
           <EllipseIcon />
-        </Button>
-        <Button
-          className="p-button-help"
-          tooltip="Triangle"
-          type="button"
-          tooltipOptions={{ position: 'bottom' }}
-          onClick={() => createTriangle(canvas, options)}
-        >
+        </button>
+        <button type="button" onClick={() => createTriangle(canvas, options)}>
           <TriangleIcon />
-        </Button>
-        <Button
-          className="p-button-help"
-          tooltip="Pencil"
-          type="button"
-          tooltipOptions={{ position: 'bottom' }}
-          onClick={() => draw(canvas)}
-        >
+        </button>
+        <button type="button" onClick={() => draw(canvas)}>
           <PencilIcon />
-        </Button>
-
-        <Button
-          className="p-button-help"
-          tooltip="Text"
-          type="button"
-          tooltipOptions={{ position: 'bottom' }}
-          onClick={() => createText(canvas)}
-        >
+        </button>
+        <button type="button" onClick={() => createText(canvas)}>
           <TextIcon />
-        </Button>
-        <Button
-          className="p-button-help"
-          tooltip="Selection mode"
-          type="button"
-          tooltipOptions={{ position: 'bottom' }}
-          onClick={() => onSelectMode(canvas)}
-        >
+        </button>
+        <button type="button" onClick={() => onSelectMode(canvas)}>
           <SelectIcon />
-        </Button>
-        <Button
-          className="p-button-help"
-          tooltip="Eraser"
-          type="button"
-          tooltipOptions={{ position: 'bottom' }}
-          onClick={() => changeToErasingMode(canvas)}
-        >
+        </button>
+        <button type="button" onClick={() => changeToErasingMode(canvas)}>
           <EraserIcon />
-        </Button>
-        <Button
-          className="p-button-help"
-          icon="pi pi-trash"
-          tooltip="Delete"
-          type="button"
-          tooltipOptions={{ position: 'bottom' }}
-          onClick={() => clearCanvas(canvas)}
-        />
+        </button>
+        <button type="button" onClick={() => clearCanvas(canvas)}>
+          Delete
+        </button>
         <div>
-          <Checkbox id="fill" checked={isFill} onChange={changeFill} />
+          <input type="checkbox" name="fill" id="fill" checked={isFill} onChange={changeFill} />
           <label htmlFor="fill">fill</label>
         </div>
-        <ColorPicker format="hex" defaultColor="000000" onChange={changeCurrentColor}></ColorPicker>
+        <div>
+          <input type="color" name="color" id="color" onChange={changeCurrentColor} />
+        </div>
         <input
           type="range"
           min={1}
@@ -591,39 +535,17 @@ const Whiteboard = () => {
           value={brushWidth}
           onChange={changeCurrentWidth}
         />
-
-        <input
-          ref={uploadImageRef}
-          className="p-d-none"
-          accept="image/*"
-          type="file"
-          onChange={uploadImage}
-        />
-        <input
-          ref={uploadPdfRef}
-          className="p-d-none"
-          accept=".pdf"
-          type="file"
-          onChange={onFileChange}
-        />
-        <div>
-          <Menu model={items} popup ref={menuRef} id="popup_menu" />
-          <Button
-            label="Upload"
-            className="p-button-help"
-            icon="pi pi-cloud-upload"
-            onClick={(event) => menuRef.current.toggle(event)}
-            aria-controls="popup_menu"
-            aria-haspopup
-          />
+        <div className="uploadInput">
+          <label htmlFor="uploadImage">+Image</label>
+          <input ref={uploadImageRef} accept="image/*" type="file" onChange={uploadImage} />
         </div>
-        <Button className="p-button-help" label="To Json" onClick={() => canvasToJson(canvas)} />
-        <Button
-          className="p-button-help"
-          label="save as image"
-          icon="pi pi-download"
-          onClick={onSaveCanvasAsImage}
-        />
+        <div className="uploadInput">
+          <label htmlFor="uploadPDF">+PDF</label>
+          <input ref={uploadPdfRef} accept=".pdf" type="file" onChange={onFileChange} />
+        </div>
+
+        <button onClick={() => canvasToJson(canvas)}>To Json</button>
+        <button onClick={onSaveCanvasAsImage}>save as image</button>
       </div>
       <canvas ref={canvasRef} id="canvas" />
       <div>

@@ -20,8 +20,11 @@
   }
 
   input {
+    margin: 0 2px;
+  }
+
+  input:not([type='checkbox']) {
     width: 50px;
-    margin: 0 1px;
   }
 
   :global(.p-button) {
