@@ -15,15 +15,15 @@ require("core-js/modules/web.dom-collections.iterator.js");
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _reactRedux = require("react-redux");
-
 var _fabric = require("fabric");
-
-var _fileupload = require("primereact/fileupload");
 
 var _button = require("primereact/button");
 
 var _checkbox = require("primereact/checkbox");
+
+var _menu = require("primereact/menu");
+
+var _colorpicker = require("primereact/colorpicker");
 
 var _PdfReader = _interopRequireDefault(require("../PdfReader"));
 
@@ -45,8 +45,6 @@ var _triangle = require("./images/triangle.svg");
 
 var _pencil = require("./images/pencil.svg");
 
-var _sweeping = require("./images/sweeping.svg");
-
 require("./eraserBrush");
 
 var _indexModule = _interopRequireDefault(require("./index.module.scss"));
@@ -56,6 +54,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 const chooseOptions = {
   icon: 'pi pi-upload',
@@ -81,10 +85,20 @@ const modes = {
   ERASER: 'ERASER'
 };
 
-const initCanvas = () => new _fabric.fabric.Canvas('canvas', {
-  height: 600,
-  width: 800
-});
+const initCanvas = () => {
+  const canvas = new _fabric.fabric.Canvas('canvas', {
+    height: 600,
+    width: 800
+  });
+  _fabric.fabric.Object.prototype.transparentCorners = false;
+  _fabric.fabric.Object.prototype.cornerStyle = 'circle';
+  _fabric.fabric.Object.prototype.borderColor = '#4447A9';
+  _fabric.fabric.Object.prototype.cornerColor = '#4447A9';
+  _fabric.fabric.Object.prototype.cornerSize = 6;
+  _fabric.fabric.Object.prototype.padding = 10;
+  _fabric.fabric.Object.prototype.borderDashArray = [5, 5];
+  return canvas;
+};
 /*  ==== line  ==== */
 
 
@@ -184,7 +198,6 @@ const startAddRect = canvas => {
       top: origY,
       width: 0,
       height: 0,
-      selectionBackgroundColor: 'rgba(245, 245, 220, 0.5)',
       selectable: false
     });
     canvas.add(drawInstance);
@@ -266,7 +279,6 @@ const startAddEllipse = canvas => {
       top: origY,
       cornerSize: 7,
       objectCaching: false,
-      selectionBackgroundColor: 'rgba(245, 245, 220, 0.5)',
       selectable: false
     });
     canvas.add(drawInstance);
@@ -340,7 +352,6 @@ const startAddTriangle = canvas => {
       top: origY,
       width: 0,
       height: 0,
-      selectionBackgroundColor: 'rgba(245, 245, 220, 0.5)',
       selectable: false
     });
     canvas.add(drawInstance);
@@ -442,15 +453,34 @@ const draw = canvas => {
 };
 
 const Whiteboard = () => {
-  const {
-    fileReader
-  } = (0, _reactRedux.useSelector)(state => state);
   const [canvas, setCanvas] = (0, _react.useState)(null);
   const [canvasJSON, setCanvasJSON] = (0, _react.useState)(null);
   const [brushWidth, setBrushWidth] = (0, _react.useState)(5);
   const [isFill, setIsFill] = (0, _react.useState)(false);
-  const fileUploadRef = (0, _react.useRef)(null);
+  const [fileReaderInfo, setFileReaderInfo] = (0, _react.useState)({
+    file: '',
+    totalPages: null,
+    currentPageNumber: 1,
+    currentPage: ''
+  });
   const canvasRef = (0, _react.useRef)(null);
+  const menuRef = (0, _react.useRef)(null);
+  const uploadImageRef = (0, _react.useRef)(null);
+  const uploadPdfRef = (0, _react.useRef)(null);
+  const items = [{
+    label: 'Image',
+    icon: 'pi pi-image',
+    command: () => {
+      console.log('uploadImageRef');
+      uploadImageRef.current.click();
+    }
+  }, {
+    label: 'PDF',
+    icon: 'pi pi-file-pdf',
+    command: () => {
+      uploadPdfRef.current.click();
+    }
+  }];
   (0, _react.useEffect)(() => {
     setCanvas(() => initCanvas());
   }, []);
@@ -458,18 +488,8 @@ const Whiteboard = () => {
     if (canvas) {
       const center = canvas.getCenter();
 
-      _fabric.fabric.Image.fromURL(fileReader.currentPage, img => {
-        const imgWidth = img.getBoundingRect().width;
-        const imgHeight = img.getBoundingRect().height; // 判斷 pdf 橫直向
-
-        if (imgWidth > imgHeight) {
-          img.scaleToWidth(canvas.width);
-        }
-
-        if (imgWidth < imgHeight) {
-          img.scaleToHeight(canvas.height);
-        }
-
+      _fabric.fabric.Image.fromURL(fileReaderInfo.currentPage, img => {
+        img.scaleToHeight(canvas.height);
         canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
           top: center.top,
           left: center.left,
@@ -479,7 +499,7 @@ const Whiteboard = () => {
         canvas.renderAll();
       });
     }
-  }, [fileReader.currentPage]);
+  }, [fileReaderInfo.currentPage]);
   (0, _react.useEffect)(() => {
     if (canvas) {
       addCanvasEventListeners(canvas);
@@ -499,6 +519,7 @@ const Whiteboard = () => {
     const file = e.target.files[0];
     reader.addEventListener('load', () => {
       _fabric.fabric.Image.fromURL(reader.result, img => {
+        img.scaleToHeight(canvas.height);
         canvas.add(img);
       });
     });
@@ -513,8 +534,8 @@ const Whiteboard = () => {
   };
 
   const changeCurrentColor = e => {
-    options.currentColor = e.target.value;
-    canvas.freeDrawingBrush.color = e.target.value;
+    options.currentColor = "#".concat(e.value);
+    canvas.freeDrawingBrush.color = "#".concat(e.value);
   };
 
   const changeFill = e => {
@@ -528,38 +549,103 @@ const Whiteboard = () => {
     });
   };
 
+  const onFileChange = event => {
+    updateFileReaderInfo({
+      file: event.target.files[0],
+      currentPageNumber: 1
+    });
+  };
+
+  const updateFileReaderInfo = data => {
+    setFileReaderInfo(_objectSpread(_objectSpread({}, fileReaderInfo), data));
+  };
+
   return /*#__PURE__*/_react.default.createElement("div", {
     className: _indexModule.default.whiteboard
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: _indexModule.default.toolbar
-  }, /*#__PURE__*/_react.default.createElement("button", {
-    className: "p-button-info",
+  }, /*#__PURE__*/_react.default.createElement(_button.Button, {
+    className: "p-button-help",
+    tooltip: "Line",
+    type: "button",
+    tooltipOptions: {
+      position: 'bottom'
+    },
     onClick: () => createLine(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_line.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
-    className: "p-button-info",
+  }, /*#__PURE__*/_react.default.createElement(_line.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
+    className: "p-button-help",
+    tooltip: "Rectangle",
+    type: "button",
+    tooltipOptions: {
+      position: 'bottom'
+    },
     onClick: () => createRect(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_rectangle.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
-    className: "p-button-info",
+  }, /*#__PURE__*/_react.default.createElement(_rectangle.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
+    className: "p-button-help",
+    tooltip: "Ellipse",
+    type: "button",
+    tooltipOptions: {
+      position: 'bottom'
+    },
     onClick: () => createEllipse(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_ellipse.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
-    className: "p-button-info",
+  }, /*#__PURE__*/_react.default.createElement(_ellipse.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
+    className: "p-button-help",
+    tooltip: "Triangle",
+    type: "button",
+    tooltipOptions: {
+      position: 'bottom'
+    },
     onClick: () => createTriangle(canvas, options)
-  }, /*#__PURE__*/_react.default.createElement(_triangle.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
-    icon: "pi pi-pencil",
-    className: "p-button-info",
+  }, /*#__PURE__*/_react.default.createElement(_triangle.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
+    className: "p-button-help",
+    tooltip: "Pencil",
+    type: "button",
+    tooltipOptions: {
+      position: 'bottom'
+    },
     onClick: () => draw(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_pencil.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
-    className: "p-button-info",
-    onClick: () => changeToErasingMode(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_eraser.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
-    className: "p-button-secondary",
+  }, /*#__PURE__*/_react.default.createElement(_pencil.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
+    className: "p-button-help",
+    tooltip: "Text",
+    type: "button",
+    tooltipOptions: {
+      position: 'bottom'
+    },
     onClick: () => createText(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_text.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
-    className: "p-button-secondary",
+  }, /*#__PURE__*/_react.default.createElement(_text.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
+    className: "p-button-help",
+    tooltip: "Selection mode",
+    type: "button",
+    tooltipOptions: {
+      position: 'bottom'
+    },
     onClick: () => onSelectMode(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_select.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("input", {
-    className: "p-button-info p-button-rounded",
-    type: "color",
+  }, /*#__PURE__*/_react.default.createElement(_select.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
+    className: "p-button-help",
+    tooltip: "Eraser",
+    type: "button",
+    tooltipOptions: {
+      position: 'bottom'
+    },
+    onClick: () => changeToErasingMode(canvas)
+  }, /*#__PURE__*/_react.default.createElement(_eraser.ReactComponent, null)), /*#__PURE__*/_react.default.createElement(_button.Button, {
+    className: "p-button-help",
+    icon: "pi pi-trash",
+    tooltip: "Delete",
+    type: "button",
+    tooltipOptions: {
+      position: 'bottom'
+    },
+    onClick: () => clearCanvas(canvas)
+  }), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_checkbox.Checkbox, {
+    id: "fill",
+    checked: isFill,
+    onChange: changeFill
+  }), /*#__PURE__*/_react.default.createElement("label", {
+    htmlFor: "fill"
+  }, "fill")), /*#__PURE__*/_react.default.createElement(_colorpicker.ColorPicker, {
+    format: "hex",
+    defaultColor: "000000",
     onChange: changeCurrentColor
   }), /*#__PURE__*/_react.default.createElement("input", {
     type: "range",
@@ -568,33 +654,46 @@ const Whiteboard = () => {
     step: 1,
     value: brushWidth,
     onChange: changeCurrentWidth
-  }), /*#__PURE__*/_react.default.createElement(_checkbox.Checkbox, {
-    id: "fill",
-    checked: isFill,
-    onChange: changeFill
-  }), /*#__PURE__*/_react.default.createElement("label", {
-    htmlFor: "fill"
-  }, "fill"), /*#__PURE__*/_react.default.createElement("button", {
-    className: "p-button-info p-button-rounded",
-    onClick: () => clearCanvas(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_sweeping.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
-    className: "p-button-info p-button-rounded",
-    onClick: () => canvasToJson(canvas)
-  }, "To Json"), /*#__PURE__*/_react.default.createElement("button", {
-    icon: "pi pi-download",
-    className: "p-button-info p-button-rounded",
-    onClick: onSaveCanvasAsImage
-  }, "save as image")), /*#__PURE__*/_react.default.createElement("canvas", {
-    ref: canvasRef,
-    id: "canvas"
-  }), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("label", {
-    htmlFor: "uploadImage"
-  }, "Upload image\uFF1A"), /*#__PURE__*/_react.default.createElement("input", {
-    id: "uploadImage",
+  }), /*#__PURE__*/_react.default.createElement("input", {
+    ref: uploadImageRef,
+    className: "p-d-none",
     accept: "image/*",
     type: "file",
     onChange: uploadImage
-  })), /*#__PURE__*/_react.default.createElement(_PdfReader.default, null));
+  }), /*#__PURE__*/_react.default.createElement("input", {
+    ref: uploadPdfRef,
+    className: "p-d-none",
+    accept: ".pdf",
+    type: "file",
+    onChange: onFileChange
+  }), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_menu.Menu, {
+    model: items,
+    popup: true,
+    ref: menuRef,
+    id: "popup_menu"
+  }), /*#__PURE__*/_react.default.createElement(_button.Button, {
+    label: "Upload",
+    className: "p-button-help",
+    icon: "pi pi-cloud-upload",
+    onClick: event => menuRef.current.toggle(event),
+    "aria-controls": "popup_menu",
+    "aria-haspopup": true
+  })), /*#__PURE__*/_react.default.createElement(_button.Button, {
+    className: "p-button-help",
+    label: "To Json",
+    onClick: () => canvasToJson(canvas)
+  }), /*#__PURE__*/_react.default.createElement(_button.Button, {
+    className: "p-button-help",
+    label: "save as image",
+    icon: "pi pi-download",
+    onClick: onSaveCanvasAsImage
+  })), /*#__PURE__*/_react.default.createElement("canvas", {
+    ref: canvasRef,
+    id: "canvas"
+  }), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_PdfReader.default, {
+    fileReaderInfo: fileReaderInfo,
+    updateFileReaderInfo: updateFileReaderInfo
+  })));
 };
 
 var _default = Whiteboard;

@@ -7,11 +7,9 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
-var _reactRedux = require("react-redux");
-
 var _entry = require("react-pdf/dist/esm/entry.webpack");
 
-var _fileReader = require("../../../actions/fileReader");
+var _button = require("primereact/button");
 
 require("react-pdf/dist/esm/Page/AnnotationLayer.css");
 
@@ -23,44 +21,33 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _reactPdf.pdfjs.GlobalWorkerOptions.workerSrc = "//cdnjs.cloudflare.com/ajax/libs/pdf.js/".concat(_reactPdf.pdfjs.version, "/pdf.worker.js");
 
-function PDFReader() {
-  const dispatch = (0, _reactRedux.useDispatch)();
-  const {
-    fileReader
-  } = (0, _reactRedux.useSelector)(state => state);
+function PDFReader(_ref) {
+  let {
+    fileReaderInfo,
+    updateFileReaderInfo
+  } = _ref;
 
   const onRenderSuccess = () => {
     const importPDFCanvas = document.querySelector('.import-pdf-page canvas');
     const pdfAsImageSrc = importPDFCanvas.toDataURL();
-    console.log('setFileReaderInfo');
-    dispatch((0, _fileReader.setFileReaderInfo)({
+    updateFileReaderInfo({
       currentPage: pdfAsImageSrc
-    }));
+    });
   };
 
-  const onFileChange = event => {
-    console.log('onFileChange');
-    console.log('event', event);
-    dispatch((0, _fileReader.setFileReaderInfo)({
-      file: event.target.files[0],
-      currentPageNumber: 1
-    }));
-  };
-
-  const onDocumentLoadSuccess = _ref => {
+  const onDocumentLoadSuccess = _ref2 => {
     let {
       numPages
-    } = _ref;
-    console.log('onDocumentLoadSuccess');
-    dispatch((0, _fileReader.setFileReaderInfo)({
+    } = _ref2;
+    updateFileReaderInfo({
       totalPages: numPages
-    }));
+    });
   };
 
   const changePage = offset => {
-    dispatch((0, _fileReader.setFileReaderInfo)({
-      currentPageNumber: fileReader.currentPageNumber + offset
-    }));
+    updateFileReaderInfo({
+      currentPageNumber: fileReaderInfo.currentPageNumber + offset
+    });
   };
 
   const nextPage = () => changePage(1);
@@ -69,39 +56,38 @@ function PDFReader() {
 
   return /*#__PURE__*/_react.default.createElement("div", {
     className: _indexModule.default.pdfReader
-  }, /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("label", {
-    htmlFor: "uploadPdf"
-  }, "Upload pdf\uFF1A"), /*#__PURE__*/_react.default.createElement("input", {
-    id: "uploadPdf",
-    accept: ".pdf",
-    type: "file",
-    onChange: onFileChange
-  })), /*#__PURE__*/_react.default.createElement("div", {
+  }, /*#__PURE__*/_react.default.createElement("div", {
     className: _indexModule.default.fileContainer
   }, /*#__PURE__*/_react.default.createElement(_entry.Document, {
     className: _indexModule.default.document,
-    file: fileReader.file,
+    file: fileReaderInfo.file,
     onLoadSuccess: onDocumentLoadSuccess,
-    onLoadProgress: _ref2 => {
+    onLoadProgress: _ref3 => {
       let {
         loaded,
         total
-      } = _ref2;
+      } = _ref3;
       return console.log('Loading a document: ' + loaded / total * 100 + '%');
     }
   }, /*#__PURE__*/_react.default.createElement(_entry.Page, {
     className: "import-pdf-page",
     onRenderSuccess: onRenderSuccess,
-    pageNumber: fileReader.currentPageNumber
-  }))), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("span", null, "Page ", fileReader.currentPageNumber, " of ", fileReader.totalPages || '--'), /*#__PURE__*/_react.default.createElement("button", {
+    pageNumber: fileReaderInfo.currentPageNumber
+  }))), /*#__PURE__*/_react.default.createElement("div", {
+    className: _indexModule.default.pageInfo
+  }, /*#__PURE__*/_react.default.createElement("span", null, "Page ", fileReaderInfo.currentPageNumber, " of ", fileReaderInfo.totalPages || '--'), /*#__PURE__*/_react.default.createElement(_button.Button, {
+    className: "p-button-info p-button-text",
     type: "button",
-    disabled: fileReader.currentPageNumber <= 1,
+    label: "< Previous",
+    disabled: fileReaderInfo.currentPageNumber <= 1,
     onClick: previousPage
-  }, "Previous"), /*#__PURE__*/_react.default.createElement("button", {
+  }), /*#__PURE__*/_react.default.createElement(_button.Button, {
+    className: "p-button-info p-button-text",
     type: "button",
-    disabled: fileReader.currentPageNumber >= fileReader.totalPages,
+    label: "Next >",
+    disabled: fileReaderInfo.currentPageNumber >= fileReaderInfo.totalPages,
     onClick: nextPage
-  }, "Next")));
+  })));
 }
 
 var _default = PDFReader;
