@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
 import { setFileReaderInfo } from '../../../actions/fileReader';
+import { Button } from 'primereact/button';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 
 import { pdfjs } from 'react-pdf';
@@ -62,20 +63,25 @@ function PDFReader() {
           />
         </Document>
       </div>
-      <div>
+      <div className={styles.pageInfo}>
         <span>
           Page {fileReader.currentPageNumber} of {fileReader.totalPages || '--'}
         </span>
-        <button type="button" disabled={fileReader.currentPageNumber <= 1} onClick={previousPage}>
-          Previous
-        </button>
-        <button
+        <Button
+          className="p-button-info p-button-text"
           type="button"
+          label="< Previous"
+          disabled={fileReader.currentPageNumber <= 1}
+          onClick={previousPage}
+        />
+
+        <Button
+          className="p-button-info p-button-text"
+          type="button"
+          label="Next >"
           disabled={fileReader.currentPageNumber >= fileReader.totalPages}
           onClick={nextPage}
-        >
-          Next
-        </button>
+        />
       </div>
     </div>
   );

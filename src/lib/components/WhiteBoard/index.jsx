@@ -13,7 +13,6 @@ import { ReactComponent as LineIcon } from './images/line.svg';
 import { ReactComponent as EllipseIcon } from './images/ellipse.svg';
 import { ReactComponent as TriangleIcon } from './images/triangle.svg';
 import { ReactComponent as PencilIcon } from './images/pencil.svg';
-import { ReactComponent as SweepingIcon } from './images/sweeping.svg';
 
 import './eraserBrush';
 
@@ -468,30 +467,91 @@ const Whiteboard = () => {
   return (
     <div className={styles.whiteboard}>
       <div className={styles.toolbar}>
-        <button className="p-button-info" onClick={() => createLine(canvas)}>
+        <Button
+          className="p-button-help"
+          tooltip="Line"
+          type="button"
+          tooltipOptions={{ position: 'bottom' }}
+          onClick={() => createLine(canvas)}
+        >
           <LineIcon />
-        </button>
-        <button className="p-button-info" onClick={() => createRect(canvas)}>
+        </Button>
+        <Button
+          className="p-button-help"
+          tooltip="Rectangle"
+          type="button"
+          tooltipOptions={{ position: 'bottom' }}
+          onClick={() => createRect(canvas)}
+        >
           <RectangleIcon />
-        </button>
-        <button className="p-button-info" onClick={() => createEllipse(canvas)}>
+        </Button>
+        <Button
+          className="p-button-help"
+          tooltip="Ellipse"
+          type="button"
+          tooltipOptions={{ position: 'bottom' }}
+          onClick={() => createEllipse(canvas)}
+        >
           <EllipseIcon />
-        </button>
-        <button className="p-button-info" onClick={() => createTriangle(canvas, options)}>
+        </Button>
+        <Button
+          className="p-button-help"
+          tooltip="Triangle"
+          type="button"
+          tooltipOptions={{ position: 'bottom' }}
+          onClick={() => createTriangle(canvas, options)}
+        >
           <TriangleIcon />
-        </button>
-        <button icon="pi pi-pencil" className="p-button-info" onClick={() => draw(canvas)}>
+        </Button>
+        <Button
+          className="p-button-help"
+          tooltip="Pencil"
+          type="button"
+          tooltipOptions={{ position: 'bottom' }}
+          onClick={() => draw(canvas)}
+        >
           <PencilIcon />
-        </button>
-        <button className="p-button-info" onClick={() => changeToErasingMode(canvas)}>
-          <EraserIcon />
-        </button>
-        <button className="p-button-secondary" onClick={() => createText(canvas)}>
+        </Button>
+
+        <Button
+          className="p-button-help"
+          tooltip="Text"
+          type="button"
+          tooltipOptions={{ position: 'bottom' }}
+          onClick={() => createText(canvas)}
+        >
           <TextIcon />
-        </button>
-        <button className="p-button-secondary" onClick={() => onSelectMode(canvas)}>
+        </Button>
+        <Button
+          className="p-button-help"
+          tooltip="Selection mode"
+          type="button"
+          tooltipOptions={{ position: 'bottom' }}
+          onClick={() => onSelectMode(canvas)}
+        >
           <SelectIcon />
-        </button>
+        </Button>
+        <Button
+          className="p-button-help"
+          tooltip="Eraser"
+          type="button"
+          tooltipOptions={{ position: 'bottom' }}
+          onClick={() => changeToErasingMode(canvas)}
+        >
+          <EraserIcon />
+        </Button>
+        <Button
+          className="p-button-help"
+          icon="pi pi-trash"
+          tooltip="Delete"
+          type="button"
+          tooltipOptions={{ position: 'bottom' }}
+          onClick={() => clearCanvas(canvas)}
+        />
+        <div>
+          <Checkbox id="fill" checked={isFill} onChange={changeFill} />
+          <label htmlFor="fill">fill</label>
+        </div>
         <input
           className="p-button-info p-button-rounded"
           type="color"
@@ -505,21 +565,13 @@ const Whiteboard = () => {
           value={brushWidth}
           onChange={changeCurrentWidth}
         />
-        <Checkbox id="fill" checked={isFill} onChange={changeFill} />
-        <label htmlFor="fill">fill</label>
-        <button className="p-button-info p-button-rounded" onClick={() => clearCanvas(canvas)}>
-          <SweepingIcon />
-        </button>
-        <button className="p-button-info p-button-rounded" onClick={() => canvasToJson(canvas)}>
-          To Json
-        </button>
-        <button
+        <Button className="p-button-help" label="To Json" onClick={() => canvasToJson(canvas)} />
+        <Button
+          className="p-button-help"
+          label="save as image"
           icon="pi pi-download"
-          className="p-button-info p-button-rounded"
           onClick={onSaveCanvasAsImage}
-        >
-          save as image
-        </button>
+        />
       </div>
       <canvas ref={canvasRef} id="canvas" />
       <div>
