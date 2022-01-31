@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { fabric } from 'fabric';
 import PdfReader from '../PdfReader';
 import { saveAs } from 'file-saver';
-import { ReactComponent as SelectIcon } from './images/select.svg';
-import { ReactComponent as EraserIcon } from './images/eraser.svg';
-import { ReactComponent as TextIcon } from './images/text.svg';
-import { ReactComponent as RectangleIcon } from './images/rectangle.svg';
-import { ReactComponent as LineIcon } from './images/line.svg';
-import { ReactComponent as EllipseIcon } from './images/ellipse.svg';
-import { ReactComponent as TriangleIcon } from './images/triangle.svg';
-import { ReactComponent as PencilIcon } from './images/pencil.svg';
+// import { ReactComponent as SelectIcon } from './images/select.svg';
+// import { ReactComponent as EraserIcon } from './images/eraser.svg';
+// import { ReactComponent as TextIcon } from './images/text.svg';
+// import { ReactComponent as RectangleIcon } from './images/rectangle.svg';
+// import { ReactComponent as LineIcon } from './images/line.svg';
+// import { ReactComponent as EllipseIcon } from './images/ellipse.svg';
+// import { ReactComponent as TriangleIcon } from './images/triangle.svg';
+// import { ReactComponent as PencilIcon } from './images/pencil.svg';
 
 import './eraserBrush';
 
@@ -494,28 +494,28 @@ const Whiteboard = () => {
     <div className={styles.whiteboard}>
       <div className={styles.toolbar}>
         <button type="button" onClick={() => createLine(canvas)}>
-          <LineIcon />
+          Line
         </button>
         <button type="button" onClick={() => createRect(canvas)}>
-          <RectangleIcon />
+          Rectangle
         </button>
         <button type="button" onClick={() => createEllipse(canvas)}>
-          <EllipseIcon />
+          Ellipse
         </button>
         <button type="button" onClick={() => createTriangle(canvas, options)}>
-          <TriangleIcon />
+          Triangle
         </button>
         <button type="button" onClick={() => draw(canvas)}>
-          <PencilIcon />
+          Pencil
         </button>
         <button type="button" onClick={() => createText(canvas)}>
-          <TextIcon />
+          Text
         </button>
         <button type="button" onClick={() => onSelectMode(canvas)}>
-          <SelectIcon />
+          Selection mode
         </button>
         <button type="button" onClick={() => changeToErasingMode(canvas)}>
-          <EraserIcon />
+          Eraser
         </button>
         <button type="button" onClick={() => clearCanvas(canvas)}>
           Delete

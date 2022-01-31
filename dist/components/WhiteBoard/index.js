@@ -21,22 +21,6 @@ var _PdfReader = _interopRequireDefault(require("../PdfReader"));
 
 var _fileSaver = require("file-saver");
 
-var _select = require("./images/select.svg");
-
-var _eraser = require("./images/eraser.svg");
-
-var _text = require("./images/text.svg");
-
-var _rectangle = require("./images/rectangle.svg");
-
-var _line = require("./images/line.svg");
-
-var _ellipse = require("./images/ellipse.svg");
-
-var _triangle = require("./images/triangle.svg");
-
-var _pencil = require("./images/pencil.svg");
-
 require("./eraserBrush");
 
 var _indexModule = _interopRequireDefault(require("./index.module.scss"));
@@ -555,28 +539,28 @@ const Whiteboard = () => {
   }, /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => createLine(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_line.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
+  }, "Line"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => createRect(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_rectangle.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
+  }, "Rectangle"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => createEllipse(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_ellipse.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
+  }, "Ellipse"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => createTriangle(canvas, options)
-  }, /*#__PURE__*/_react.default.createElement(_triangle.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
+  }, "Triangle"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => draw(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_pencil.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
+  }, "Pencil"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => createText(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_text.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
+  }, "Text"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => onSelectMode(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_select.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
+  }, "Selection mode"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => changeToErasingMode(canvas)
-  }, /*#__PURE__*/_react.default.createElement(_eraser.ReactComponent, null)), /*#__PURE__*/_react.default.createElement("button", {
+  }, "Eraser"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => clearCanvas(canvas)
   }, "Delete"), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("input", {
