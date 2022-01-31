@@ -18,3 +18,32 @@ button {
     background-color: #d5e4eb;
   }
 }
+
+.uploadInput {
+  position: relative;
+  width: fit-content;
+  height: 28px;
+  margin: 0 5px;
+  overflow: hidden;
+  border-radius: 3px;
+
+  input {
+    height: 100%;
+  }
+
+  label {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    line-height: 28px;
+    margin: auto;
+    text-align: center;
+    font-size: 15px;
+    color: #fff;
+    background-color: #9c27b0;
+    cursor: pointer;
+  }
+}

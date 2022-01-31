@@ -18,19 +18,10 @@ function PDFReader() {
     const importPDFCanvas = document.querySelector('.import-pdf-page canvas');
     const pdfAsImageSrc = importPDFCanvas.toDataURL();
 
-    console.log('setFileReaderInfo');
-
     dispatch(setFileReaderInfo({ currentPage: pdfAsImageSrc }));
   };
 
-  const onFileChange = (event) => {
-    console.log('onFileChange');
-    console.log('event', event);
-    dispatch(setFileReaderInfo({ file: event.target.files[0], currentPageNumber: 1 }));
-  };
-
   const onDocumentLoadSuccess = ({ numPages }) => {
-    console.log('onDocumentLoadSuccess');
     dispatch(setFileReaderInfo({ totalPages: numPages }));
   };
 
@@ -43,10 +34,6 @@ function PDFReader() {
 
   return (
     <div className={styles.pdfReader}>
-      <div>
-        <label htmlFor="uploadPdf">Upload pdf：</label>
-        <input id="uploadPdf" accept=".pdf" type="file" onChange={onFileChange} />
-      </div>
       <div className={styles.fileContainer}>
         <Document
           className={styles.document}

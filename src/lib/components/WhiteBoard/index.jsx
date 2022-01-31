@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { fabric } from 'fabric';
 import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
+import { Menu } from 'primereact/menu';
 import PdfReader from '../PdfReader';
 import { saveAs } from 'file-saver';
+import { setFileReaderInfo } from '../../../actions/fileReader';
 import { ReactComponent as SelectIcon } from './images/select.svg';
 import { ReactComponent as EraserIcon } from './images/eraser.svg';
 import { ReactComponent as TextIcon } from './images/text.svg';
@@ -385,12 +387,34 @@ const draw = (canvas) => {
 };
 
 const Whiteboard = () => {
+  const dispatch = useDispatch();
   const { fileReader } = useSelector((state) => state);
   const [canvas, setCanvas] = useState(null);
   const [canvasJSON, setCanvasJSON] = useState(null);
   const [brushWidth, setBrushWidth] = useState(5);
   const [isFill, setIsFill] = useState(false);
   const canvasRef = useRef(null);
+  const menuRef = useRef(null);
+  const uploadImageRef = useRef(null);
+  const uploadPdfRef = useRef(null);
+
+  const items = [
+    {
+      label: 'Image',
+      icon: 'pi pi-image',
+      command: () => {
+        console.log('uploadImageRef');
+        uploadImageRef.current.click();
+      },
+    },
+    {
+      label: 'PDF',
+      icon: 'pi pi-file-pdf',
+      command: () => {
+        uploadPdfRef.current.click();
+      },
+    },
+  ];
 
   useEffect(() => {
     setCanvas(() => initCanvas());
@@ -462,6 +486,10 @@ const Whiteboard = () => {
     canvasRef.current.toBlob(function (blob) {
       saveAs(blob, 'image.png');
     });
+  };
+
+  const onFileChange = (event) => {
+    dispatch(setFileReaderInfo({ file: event.target.files[0], currentPageNumber: 1 }));
   };
 
   return (
@@ -565,6 +593,32 @@ const Whiteboard = () => {
           value={brushWidth}
           onChange={changeCurrentWidth}
         />
+
+        <input
+          ref={uploadImageRef}
+          className="p-d-none"
+          accept="image/*"
+          type="file"
+          onChange={uploadImage}
+        />
+        <input
+          ref={uploadPdfRef}
+          className="p-d-none"
+          accept=".pdf"
+          type="file"
+          onChange={onFileChange}
+        />
+        <div>
+          <Menu model={items} popup ref={menuRef} id="popup_menu" />
+          <Button
+            label="Upload"
+            className="p-button-help"
+            icon="pi pi-cloud-upload"
+            onClick={(event) => menuRef.current.toggle(event)}
+            aria-controls="popup_menu"
+            aria-haspopup
+          />
+        </div>
         <Button className="p-button-help" label="To Json" onClick={() => canvasToJson(canvas)} />
         <Button
           className="p-button-help"
@@ -575,10 +629,8 @@ const Whiteboard = () => {
       </div>
       <canvas ref={canvasRef} id="canvas" />
       <div>
-        <label htmlFor="uploadImage">Upload image：</label>
-        <input id="uploadImage" accept="image/*" type="file" onChange={uploadImage} />
+        <PdfReader />
       </div>
-      <PdfReader />
     </div>
   );
 };
