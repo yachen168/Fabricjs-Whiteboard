@@ -10,6 +10,6 @@ Object.defineProperty(exports, "Whiteboard", {
   }
 });
 
-var _Whiteboard = _interopRequireDefault(require("./Whiteboard"));
+var _Whiteboard = _interopRequireDefault(require("./components/Whiteboard"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
