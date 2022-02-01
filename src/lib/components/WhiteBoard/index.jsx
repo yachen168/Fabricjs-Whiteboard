@@ -67,6 +67,10 @@ const removeObject = (canvas) => {
   };
 };
 
+const stopDrawing = () => {
+  mouseDown = false;
+};
+
 /*  ==== line  ==== */
 const createLine = (canvas) => {
   if (modes.currentMode !== modes.LINE) {
@@ -78,7 +82,7 @@ const createLine = (canvas) => {
 
     canvas.on('mouse:down', startAddLine(canvas));
     canvas.on('mouse:move', startDrawingLine(canvas));
-    canvas.on('mouse:up', stopDrawingLine);
+    canvas.on('mouse:up', stopDrawing);
 
     canvas.selection = false;
     canvas.hoverCursor = 'auto';
@@ -117,9 +121,6 @@ const startDrawingLine = (canvas) => {
     }
   };
 };
-const stopDrawingLine = () => {
-  mouseDown = false;
-};
 
 /* ==== rectangle ==== */
 const createRect = (canvas) => {
@@ -132,7 +133,7 @@ const createRect = (canvas) => {
 
     canvas.on('mouse:down', startAddRect(canvas));
     canvas.on('mouse:move', startDrawingRect(canvas));
-    canvas.on('mouse:up', stopDrawingRect);
+    canvas.on('mouse:up', stopDrawing);
 
     canvas.selection = false;
     canvas.hoverCursor = 'auto';
@@ -193,10 +194,6 @@ const startDrawingRect = (canvas) => {
   };
 };
 
-const stopDrawingRect = () => {
-  mouseDown = false;
-};
-
 /* ==== Ellipse ==== */
 const createEllipse = (canvas) => {
   if (options.currentMode !== modes.ELLIPSE) {
@@ -208,7 +205,7 @@ const createEllipse = (canvas) => {
 
     canvas.on('mouse:down', startAddEllipse(canvas));
     canvas.on('mouse:move', startDrawingEllipse(canvas));
-    canvas.on('mouse:up', stopDrawingEllipse);
+    canvas.on('mouse:up', stopDrawing);
 
     canvas.selection = false;
     canvas.hoverCursor = 'auto';
@@ -260,10 +257,6 @@ const startDrawingEllipse = (canvas) => {
   };
 };
 
-const stopDrawingEllipse = () => {
-  mouseDown = false;
-};
-
 /* === triangle === */
 const createTriangle = (canvas) => {
   canvas.off('mouse:down');
@@ -272,7 +265,7 @@ const createTriangle = (canvas) => {
 
   canvas.on('mouse:down', startAddTriangle(canvas));
   canvas.on('mouse:move', startDrawingTriangle(canvas));
-  canvas.on('mouse:up', stopDrawingTriangle);
+  canvas.on('mouse:up', stopDrawing);
 
   canvas.selection = false;
   canvas.hoverCursor = 'auto';
@@ -323,10 +316,6 @@ const startDrawingTriangle = (canvas) => {
       canvas.renderAll();
     }
   };
-};
-
-const stopDrawingTriangle = () => {
-  mouseDown = false;
 };
 
 const createText = (canvas) => {
@@ -389,7 +378,7 @@ const draw = (canvas) => {
     canvas.off('path:created');
 
     options.currentMode = modes.PENCIL;
-    canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+    // canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
     canvas.freeDrawingBrush.width = parseInt(options.currentWidth, 10) || 1;
     canvas.isDrawingMode = true;
   }
@@ -397,7 +386,6 @@ const draw = (canvas) => {
 
 const Whiteboard = () => {
   const [canvas, setCanvas] = useState(null);
-  const [canvasJSON, setCanvasJSON] = useState(null);
   const [brushWidth, setBrushWidth] = useState(5);
   const [isFill, setIsFill] = useState(false);
   const [fileReaderInfo, setFileReaderInfo] = useState({
@@ -432,20 +420,6 @@ const Whiteboard = () => {
       });
     }
   }, [fileReaderInfo.currentPage]);
-
-  useEffect(() => {
-    if (canvas) {
-      addCanvasEventListeners(canvas);
-      canvas.loadFromJSON(canvasJSON);
-      canvas.renderAll();
-    }
-  }, [canvas]);
-
-  const addCanvasEventListeners = (canvas) => {
-    canvas.on('mouse:up', (event) => {
-      const data = JSON.stringify(canvas.toJSON());
-    });
-  };
 
   const uploadImage = (e) => {
     const reader = new FileReader();
