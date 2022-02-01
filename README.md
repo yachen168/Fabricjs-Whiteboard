@@ -1,5 +1,5 @@
 # react-fabricjs-whiteboard ( 👷‍♀️ 🔨)
-demo page: https://vigorous-heisenberg-7f8730.netlify.app/
+Demo page: https://vigorous-heisenberg-7f8730.netlify.app/
 
 <br/>
 
