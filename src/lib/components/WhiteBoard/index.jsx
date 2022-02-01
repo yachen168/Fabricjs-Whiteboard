@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { fabric } from 'fabric';
 import PdfReader from '../PdfReader';
 import { saveAs } from 'file-saver';
+import getCursor from './cursors';
 import SelectIcon from './images/select.svg';
 import EraserIcon from './images/eraser.svg';
 import TextIcon from './images/text.svg';
@@ -355,6 +356,7 @@ const changeToErasingMode = (canvas) => {
     canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
     canvas.freeDrawingBrush.width = options.currentWidth;
     canvas.isDrawingMode = true;
+    canvas.freeDrawingCursor = `url(${getCursor({ type: 'eraser' })}), default`;
   }
 };
 

@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.c21ea650.chunk.css",
-    "main.js": "/static/js/main.7b9bb5d8.chunk.js",
+    "main.js": "/static/js/main.8e262a5c.chunk.js",
     "runtime-main.js": "/static/js/runtime-main.7b275bf5.js",
     "static/js/2.12bd58fb.chunk.js": "/static/js/2.12bd58fb.chunk.js",
     "e7e915313973ba1d49f9bb2a1998626e.js": "/e7e915313973ba1d49f9bb2a1998626e.js",
@@ -14,6 +14,7 @@
     "static/media/line.8231e012.svg": "/static/media/line.8231e012.svg",
     "static/media/pencil.eda8d85b.svg": "/static/media/pencil.eda8d85b.svg",
     "static/media/rectangle.55957e34.svg": "/static/media/rectangle.55957e34.svg",
+    "static/media/remove.30a74efc.svg": "/static/media/remove.30a74efc.svg",
     "static/media/select.ad97be73.svg": "/static/media/select.ad97be73.svg",
     "static/media/text.abecf614.svg": "/static/media/text.abecf614.svg",
     "static/media/triangle.58a0a70e.svg": "/static/media/triangle.58a0a70e.svg"
@@ -22,6 +23,6 @@
     "static/js/runtime-main.7b275bf5.js",
     "static/js/2.12bd58fb.chunk.js",
     "static/css/main.c21ea650.chunk.css",
-    "static/js/main.7b9bb5d8.chunk.js"
+    "static/js/main.8e262a5c.chunk.js"
   ]
 }
