@@ -1,4 +1,7 @@
 # react-fabricjs-whiteboard ( 👷‍♀️ 🔨)
+
+React whiteboard component base on [fabric.js](http://fabricjs.com/) and [FileSaver.js](https://github.com/eligrey/FileSaver.js#readme).
+
 Demo page: https://vigorous-heisenberg-7f8730.netlify.app/
 
 <br/>
