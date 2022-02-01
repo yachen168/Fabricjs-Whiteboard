@@ -48,6 +48,13 @@ const initCanvas = () => {
   fabric.Object.prototype.padding = 10;
   fabric.Object.prototype.borderDashArray = [5, 5];
 
+  canvas.on('object:added', (e) => {
+    e.target.on('mousedown', removeObject(canvas));
+  });
+  canvas.on('path:created', (e) => {
+    e.path.on('mousedown', removeObject(canvas));
+  });
+
   return canvas;
 };
 
@@ -90,7 +97,7 @@ const startAddLine = (canvas) => {
       stroke: options.currentColor,
       selectable: false,
     });
-    drawInstance.on('mousedown', removeObject(canvas));
+
     canvas.add(drawInstance);
     canvas.requestRenderAll();
   };
@@ -152,7 +159,7 @@ const startAddRect = (canvas) => {
       height: 0,
       selectable: false,
     });
-    drawInstance.on('mousedown', removeObject(canvas));
+
     canvas.add(drawInstance);
 
     drawInstance.on('mousedown', (e) => {
@@ -228,7 +235,6 @@ const startAddEllipse = (canvas) => {
       selectable: false,
     });
 
-    drawInstance.on('mousedown', removeObject(canvas));
     canvas.add(drawInstance);
   };
 };
@@ -293,7 +299,6 @@ const startAddTriangle = (canvas) => {
       selectable: false,
     });
 
-    drawInstance.on('mousedown', removeObject(canvas));
     canvas.add(drawInstance);
   };
 };
@@ -383,9 +388,6 @@ const draw = (canvas) => {
     canvas.off('mouse:move');
     canvas.off('mouse:up');
     canvas.off('path:created');
-    canvas.on('path:created', (e) => {
-      e.path.on('mousedown', removeObject(canvas));
-    });
 
     options.currentMode = modes.PENCIL;
     canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
@@ -406,30 +408,13 @@ const Whiteboard = () => {
     currentPage: '',
   });
   const canvasRef = useRef(null);
-  const menuRef = useRef(null);
   const uploadImageRef = useRef(null);
   const uploadPdfRef = useRef(null);
 
-  const items = [
-    {
-      label: 'Image',
-      icon: 'pi pi-image',
-      command: () => {
-        console.log('uploadImageRef');
-        uploadImageRef.current.click();
-      },
-    },
-    {
-      label: 'PDF',
-      icon: 'pi pi-file-pdf',
-      command: () => {
-        uploadPdfRef.current.click();
-      },
-    },
-  ];
-
   useEffect(() => {
-    setCanvas(() => initCanvas());
+    if (!canvas) {
+      setCanvas(() => initCanvas());
+    }
   }, []);
 
   useEffect(() => {

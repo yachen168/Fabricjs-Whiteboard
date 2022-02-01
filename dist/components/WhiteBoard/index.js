@@ -87,6 +87,12 @@ const initCanvas = () => {
   _fabric.fabric.Object.prototype.cornerSize = 6;
   _fabric.fabric.Object.prototype.padding = 10;
   _fabric.fabric.Object.prototype.borderDashArray = [5, 5];
+  canvas.on('object:added', e => {
+    e.target.on('mousedown', removeObject(canvas));
+  });
+  canvas.on('path:created', e => {
+    e.path.on('mousedown', removeObject(canvas));
+  });
   return canvas;
 };
 
@@ -131,7 +137,6 @@ const startAddLine = canvas => {
       stroke: options.currentColor,
       selectable: false
     });
-    drawInstance.on('mousedown', removeObject(canvas));
     canvas.add(drawInstance);
     canvas.requestRenderAll();
   };
@@ -199,7 +204,6 @@ const startAddRect = canvas => {
       height: 0,
       selectable: false
     });
-    drawInstance.on('mousedown', removeObject(canvas));
     canvas.add(drawInstance);
     drawInstance.on('mousedown', e => {
       if (options.currentMode === modes.ERASER) {
@@ -281,7 +285,6 @@ const startAddEllipse = canvas => {
       objectCaching: false,
       selectable: false
     });
-    drawInstance.on('mousedown', removeObject(canvas));
     canvas.add(drawInstance);
   };
 };
@@ -355,7 +358,6 @@ const startAddTriangle = canvas => {
       height: 0,
       selectable: false
     });
-    drawInstance.on('mousedown', removeObject(canvas));
     canvas.add(drawInstance);
   };
 };
@@ -448,9 +450,6 @@ const draw = canvas => {
     canvas.off('mouse:move');
     canvas.off('mouse:up');
     canvas.off('path:created');
-    canvas.on('path:created', e => {
-      e.path.on('mousedown', removeObject(canvas));
-    });
     options.currentMode = modes.PENCIL;
     canvas.freeDrawingBrush = new _fabric.fabric.PencilBrush(canvas);
     canvas.freeDrawingBrush.width = parseInt(options.currentWidth, 10) || 1;
@@ -470,25 +469,12 @@ const Whiteboard = () => {
     currentPage: ''
   });
   const canvasRef = (0, _react.useRef)(null);
-  const menuRef = (0, _react.useRef)(null);
   const uploadImageRef = (0, _react.useRef)(null);
   const uploadPdfRef = (0, _react.useRef)(null);
-  const items = [{
-    label: 'Image',
-    icon: 'pi pi-image',
-    command: () => {
-      console.log('uploadImageRef');
-      uploadImageRef.current.click();
-    }
-  }, {
-    label: 'PDF',
-    icon: 'pi pi-file-pdf',
-    command: () => {
-      uploadPdfRef.current.click();
-    }
-  }];
   (0, _react.useEffect)(() => {
-    setCanvas(() => initCanvas());
+    if (!canvas) {
+      setCanvas(() => initCanvas());
+    }
   }, []);
   (0, _react.useEffect)(() => {
     if (canvas) {
