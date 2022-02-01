@@ -353,10 +353,7 @@ const changeToErasingMode = (canvas) => {
     canvas.off('mouse:up');
 
     options.currentMode = modes.ERASER;
-    canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
-    canvas.freeDrawingBrush.width = options.currentWidth;
-    canvas.isDrawingMode = true;
-    canvas.freeDrawingCursor = `url(${getCursor({ type: 'eraser' })}), default`;
+    canvas.hoverCursor = `url(${getCursor({ type: 'eraser' })}), default`;
   }
 };
 
