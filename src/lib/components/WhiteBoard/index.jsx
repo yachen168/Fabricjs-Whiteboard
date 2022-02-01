@@ -51,6 +51,14 @@ const initCanvas = () => {
   return canvas;
 };
 
+const removeObject = (canvas) => {
+  return (e) => {
+    if (options.currentMode === modes.ERASER) {
+      canvas.remove(e.target);
+    }
+  };
+};
+
 /*  ==== line  ==== */
 const createLine = (canvas) => {
   if (modes.currentMode !== modes.LINE) {
@@ -82,7 +90,7 @@ const startAddLine = (canvas) => {
       stroke: options.currentColor,
       selectable: false,
     });
-
+    drawInstance.on('mousedown', removeObject(canvas));
     canvas.add(drawInstance);
     canvas.requestRenderAll();
   };
@@ -144,6 +152,7 @@ const startAddRect = (canvas) => {
       height: 0,
       selectable: false,
     });
+    drawInstance.on('mousedown', removeObject(canvas));
     canvas.add(drawInstance);
 
     drawInstance.on('mousedown', (e) => {
@@ -218,6 +227,8 @@ const startAddEllipse = (canvas) => {
       objectCaching: false,
       selectable: false,
     });
+
+    drawInstance.on('mousedown', removeObject(canvas));
     canvas.add(drawInstance);
   };
 };
@@ -281,6 +292,8 @@ const startAddTriangle = (canvas) => {
       height: 0,
       selectable: false,
     });
+
+    drawInstance.on('mousedown', removeObject(canvas));
     canvas.add(drawInstance);
   };
 };
@@ -369,6 +382,10 @@ const draw = (canvas) => {
     canvas.off('mouse:down');
     canvas.off('mouse:move');
     canvas.off('mouse:up');
+    canvas.off('path:created');
+    canvas.on('path:created', (e) => {
+      e.path.on('mousedown', removeObject(canvas));
+    });
 
     options.currentMode = modes.PENCIL;
     canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
