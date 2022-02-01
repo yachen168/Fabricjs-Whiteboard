@@ -21,6 +21,22 @@ var _PdfReader = _interopRequireDefault(require("../PdfReader"));
 
 var _fileSaver = require("file-saver");
 
+var _select = _interopRequireDefault(require("./images/select.svg"));
+
+var _eraser = _interopRequireDefault(require("./images/eraser.svg"));
+
+var _text = _interopRequireDefault(require("./images/text.svg"));
+
+var _rectangle = _interopRequireDefault(require("./images/rectangle.svg"));
+
+var _line = _interopRequireDefault(require("./images/line.svg"));
+
+var _ellipse = _interopRequireDefault(require("./images/ellipse.svg"));
+
+var _triangle = _interopRequireDefault(require("./images/triangle.svg"));
+
+var _pencil = _interopRequireDefault(require("./images/pencil.svg"));
+
 require("./eraserBrush");
 
 var _indexModule = _interopRequireDefault(require("./index.module.scss"));
@@ -539,10 +555,16 @@ const Whiteboard = () => {
   }, /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => createLine(canvas)
-  }, "Line"), /*#__PURE__*/_react.default.createElement("button", {
+  }, /*#__PURE__*/_react.default.createElement("img", {
+    src: _line.default,
+    alt: "line"
+  })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => createRect(canvas)
-  }, "Rectangle"), /*#__PURE__*/_react.default.createElement("button", {
+  }, /*#__PURE__*/_react.default.createElement("img", {
+    src: _rectangle.default,
+    alt: "Rectangle"
+  })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => createEllipse(canvas)
   }, "Ellipse"), /*#__PURE__*/_react.default.createElement("button", {

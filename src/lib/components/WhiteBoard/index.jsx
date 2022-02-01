@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { fabric } from 'fabric';
 import PdfReader from '../PdfReader';
 import { saveAs } from 'file-saver';
-// import { ReactComponent as SelectIcon } from './images/select.svg';
-// import { ReactComponent as EraserIcon } from './images/eraser.svg';
-// import { ReactComponent as TextIcon } from './images/text.svg';
-// import { ReactComponent as RectangleIcon } from './images/rectangle.svg';
-// import { ReactComponent as LineIcon } from './images/line.svg';
-// import { ReactComponent as EllipseIcon } from './images/ellipse.svg';
-// import { ReactComponent as TriangleIcon } from './images/triangle.svg';
-// import { ReactComponent as PencilIcon } from './images/pencil.svg';
+import SelectIcon from './images/select.svg';
+import EraserIcon from './images/eraser.svg';
+import TextIcon from './images/text.svg';
+import RectangleIcon from './images/rectangle.svg';
+import LineIcon from './images/line.svg';
+import EllipseIcon from './images/ellipse.svg';
+import TriangleIcon from './images/triangle.svg';
+import PencilIcon from './images/pencil.svg';
 
 import './eraserBrush';
 
@@ -494,10 +494,10 @@ const Whiteboard = () => {
     <div className={styles.whiteboard}>
       <div className={styles.toolbar}>
         <button type="button" onClick={() => createLine(canvas)}>
-          Line
+          <img src={LineIcon} alt="line" />
         </button>
         <button type="button" onClick={() => createRect(canvas)}>
-          Rectangle
+          <img src={RectangleIcon} alt="Rectangle" />
         </button>
         <button type="button" onClick={() => createEllipse(canvas)}>
           Ellipse
