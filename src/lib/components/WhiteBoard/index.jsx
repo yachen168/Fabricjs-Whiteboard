@@ -10,6 +10,7 @@ import LineIcon from './images/line.svg';
 import EllipseIcon from './images/ellipse.svg';
 import TriangleIcon from './images/triangle.svg';
 import PencilIcon from './images/pencil.svg';
+import DeleteIcon from './images/delete.svg';
 
 import './eraserBrush';
 
@@ -500,25 +501,25 @@ const Whiteboard = () => {
           <img src={RectangleIcon} alt="Rectangle" />
         </button>
         <button type="button" onClick={() => createEllipse(canvas)}>
-          Ellipse
+          <img src={EllipseIcon} alt="Ellipse" />
         </button>
         <button type="button" onClick={() => createTriangle(canvas, options)}>
-          Triangle
+          <img src={TriangleIcon} alt="Triangle" />
         </button>
         <button type="button" onClick={() => draw(canvas)}>
-          Pencil
+          <img src={PencilIcon} alt="Pencil" />
         </button>
         <button type="button" onClick={() => createText(canvas)}>
-          Text
+          <img src={TextIcon} alt="Text" />
         </button>
         <button type="button" onClick={() => onSelectMode(canvas)}>
-          Selection mode
+          <img src={SelectIcon} alt="Selection mode" />
         </button>
         <button type="button" onClick={() => changeToErasingMode(canvas)}>
-          Eraser
+          <img src={EraserIcon} alt="Eraser" />
         </button>
         <button type="button" onClick={() => clearCanvas(canvas)}>
-          Delete
+          <img src={DeleteIcon} alt="Delete" />
         </button>
         <div>
           <input type="checkbox" name="fill" id="fill" checked={isFill} onChange={changeFill} />

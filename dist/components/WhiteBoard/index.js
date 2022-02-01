@@ -37,6 +37,8 @@ var _triangle = _interopRequireDefault(require("./images/triangle.svg"));
 
 var _pencil = _interopRequireDefault(require("./images/pencil.svg"));
 
+var _delete = _interopRequireDefault(require("./images/delete.svg"));
+
 require("./eraserBrush");
 
 var _indexModule = _interopRequireDefault(require("./index.module.scss"));
@@ -567,25 +569,46 @@ const Whiteboard = () => {
   })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => createEllipse(canvas)
-  }, "Ellipse"), /*#__PURE__*/_react.default.createElement("button", {
+  }, /*#__PURE__*/_react.default.createElement("img", {
+    src: _ellipse.default,
+    alt: "Ellipse"
+  })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => createTriangle(canvas, options)
-  }, "Triangle"), /*#__PURE__*/_react.default.createElement("button", {
+  }, /*#__PURE__*/_react.default.createElement("img", {
+    src: _triangle.default,
+    alt: "Triangle"
+  })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => draw(canvas)
-  }, "Pencil"), /*#__PURE__*/_react.default.createElement("button", {
+  }, /*#__PURE__*/_react.default.createElement("img", {
+    src: _pencil.default,
+    alt: "Pencil"
+  })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => createText(canvas)
-  }, "Text"), /*#__PURE__*/_react.default.createElement("button", {
+  }, /*#__PURE__*/_react.default.createElement("img", {
+    src: _text.default,
+    alt: "Text"
+  })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => onSelectMode(canvas)
-  }, "Selection mode"), /*#__PURE__*/_react.default.createElement("button", {
+  }, /*#__PURE__*/_react.default.createElement("img", {
+    src: _select.default,
+    alt: "Selection mode"
+  })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => changeToErasingMode(canvas)
-  }, "Eraser"), /*#__PURE__*/_react.default.createElement("button", {
+  }, /*#__PURE__*/_react.default.createElement("img", {
+    src: _eraser.default,
+    alt: "Eraser"
+  })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: () => clearCanvas(canvas)
-  }, "Delete"), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("input", {
+  }, /*#__PURE__*/_react.default.createElement("img", {
+    src: _delete.default,
+    alt: "Delete"
+  })), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("input", {
     type: "checkbox",
     name: "fill",
     id: "fill",
