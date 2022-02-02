@@ -17,34 +17,34 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _reactPdf.pdfjs.GlobalWorkerOptions.workerSrc = "//cdnjs.cloudflare.com/ajax/libs/pdf.js/".concat(_reactPdf.pdfjs.version, "/pdf.worker.js");
 
-function PDFReader(_ref) {
+const PDFReader = _ref => {
   let {
     fileReaderInfo,
     updateFileReaderInfo
   } = _ref;
 
-  const onRenderSuccess = () => {
+  function onRenderSuccess() {
     const importPDFCanvas = document.querySelector('.import-pdf-page canvas');
     const pdfAsImageSrc = importPDFCanvas.toDataURL();
     updateFileReaderInfo({
       currentPage: pdfAsImageSrc
     });
-  };
+  }
 
-  const onDocumentLoadSuccess = _ref2 => {
+  function onDocumentLoadSuccess(_ref2) {
     let {
       numPages
     } = _ref2;
     updateFileReaderInfo({
       totalPages: numPages
     });
-  };
+  }
 
-  const changePage = offset => {
+  function changePage(offset) {
     updateFileReaderInfo({
       currentPageNumber: fileReaderInfo.currentPageNumber + offset
     });
-  };
+  }
 
   const nextPage = () => changePage(1);
 
@@ -80,7 +80,7 @@ function PDFReader(_ref) {
     disabled: fileReaderInfo.currentPageNumber >= fileReaderInfo.totalPages,
     onClick: nextPage
   }, "Next")));
-}
+};
 
 var _default = PDFReader;
 exports.default = _default;

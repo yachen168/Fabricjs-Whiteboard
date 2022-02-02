@@ -21,6 +21,8 @@ var _PdfReader = _interopRequireDefault(require("../PdfReader"));
 
 var _fileSaver = require("file-saver");
 
+var _cursors = _interopRequireDefault(require("./cursors"));
+
 var _select = _interopRequireDefault(require("./images/select.svg"));
 
 var _eraser = _interopRequireDefault(require("./images/eraser.svg"));
@@ -96,25 +98,33 @@ const initCanvas = () => {
   return canvas;
 };
 
-const removeObject = canvas => {
+function removeObject(canvas) {
   return e => {
     if (options.currentMode === modes.ERASER) {
       canvas.remove(e.target);
     }
   };
-};
+}
+
+function stopDrawing() {
+  mouseDown = false;
+}
+
+function removeCanvasListener(canvas) {
+  canvas.off('mouse:down');
+  canvas.off('mouse:move');
+  canvas.off('mouse:up');
+}
 /*  ==== line  ==== */
 
 
-const createLine = canvas => {
+function createLine(canvas) {
   if (modes.currentMode !== modes.LINE) {
     options.currentMode = modes.LINE;
-    canvas.off('mouse:down');
-    canvas.off('mouse:move');
-    canvas.off('mouse:up');
+    removeCanvasListener(canvas);
     canvas.on('mouse:down', startAddLine(canvas));
     canvas.on('mouse:move', startDrawingLine(canvas));
-    canvas.on('mouse:up', stopDrawingLine);
+    canvas.on('mouse:up', stopDrawing);
     canvas.selection = false;
     canvas.hoverCursor = 'auto';
     canvas.isDrawingMode = false;
@@ -123,9 +133,9 @@ const createLine = canvas => {
     }));
     canvas.discardActiveObject().requestRenderAll();
   }
-};
+}
 
-const startAddLine = canvas => {
+function startAddLine(canvas) {
   return _ref => {
     let {
       e
@@ -140,9 +150,9 @@ const startAddLine = canvas => {
     canvas.add(drawInstance);
     canvas.requestRenderAll();
   };
-};
+}
 
-const startDrawingLine = canvas => {
+function startDrawingLine(canvas) {
   return _ref2 => {
     let {
       e
@@ -158,23 +168,17 @@ const startDrawingLine = canvas => {
       canvas.requestRenderAll();
     }
   };
-};
-
-const stopDrawingLine = () => {
-  mouseDown = false;
-};
+}
 /* ==== rectangle ==== */
 
 
-const createRect = canvas => {
+function createRect(canvas) {
   if (options.currentMode !== modes.RECTANGLE) {
     options.currentMode = modes.RECTANGLE;
-    canvas.off('mouse:down');
-    canvas.off('mouse:move');
-    canvas.off('mouse:up');
+    removeCanvasListener(canvas);
     canvas.on('mouse:down', startAddRect(canvas));
     canvas.on('mouse:move', startDrawingRect(canvas));
-    canvas.on('mouse:up', stopDrawingRect);
+    canvas.on('mouse:up', stopDrawing);
     canvas.selection = false;
     canvas.hoverCursor = 'auto';
     canvas.isDrawingMode = false;
@@ -183,9 +187,9 @@ const createRect = canvas => {
     }));
     canvas.discardActiveObject().requestRenderAll();
   }
-};
+}
 
-const startAddRect = canvas => {
+function startAddRect(canvas) {
   return _ref3 => {
     let {
       e
@@ -212,9 +216,9 @@ const startAddRect = canvas => {
       }
     });
   };
-};
+}
 
-const startDrawingRect = canvas => {
+function startDrawingRect(canvas) {
   return _ref4 => {
     let {
       e
@@ -239,23 +243,17 @@ const startDrawingRect = canvas => {
       canvas.renderAll();
     }
   };
-};
-
-const stopDrawingRect = () => {
-  mouseDown = false;
-};
+}
 /* ==== Ellipse ==== */
 
 
-const createEllipse = canvas => {
+function createEllipse(canvas) {
   if (options.currentMode !== modes.ELLIPSE) {
     options.currentMode = modes.ELLIPSE;
-    canvas.off('mouse:down');
-    canvas.off('mouse:move');
-    canvas.off('mouse:up');
+    removeCanvasListener(canvas);
     canvas.on('mouse:down', startAddEllipse(canvas));
     canvas.on('mouse:move', startDrawingEllipse(canvas));
-    canvas.on('mouse:up', stopDrawingEllipse);
+    canvas.on('mouse:up', stopDrawing);
     canvas.selection = false;
     canvas.hoverCursor = 'auto';
     canvas.isDrawingMode = false;
@@ -264,9 +262,9 @@ const createEllipse = canvas => {
     }));
     canvas.discardActiveObject().requestRenderAll();
   }
-};
+}
 
-const startAddEllipse = canvas => {
+function startAddEllipse(canvas) {
   return _ref5 => {
     let {
       e
@@ -287,9 +285,9 @@ const startAddEllipse = canvas => {
     });
     canvas.add(drawInstance);
   };
-};
+}
 
-const startDrawingEllipse = canvas => {
+function startDrawingEllipse(canvas) {
   return _ref6 => {
     let {
       e
@@ -314,21 +312,15 @@ const startDrawingEllipse = canvas => {
       canvas.renderAll();
     }
   };
-};
-
-const stopDrawingEllipse = () => {
-  mouseDown = false;
-};
+}
 /* === triangle === */
 
 
-const createTriangle = canvas => {
-  canvas.off('mouse:down');
-  canvas.off('mouse:move');
-  canvas.off('mouse:up');
+function createTriangle(canvas) {
+  removeCanvasListener(canvas);
   canvas.on('mouse:down', startAddTriangle(canvas));
   canvas.on('mouse:move', startDrawingTriangle(canvas));
-  canvas.on('mouse:up', stopDrawingTriangle);
+  canvas.on('mouse:up', stopDrawing);
   canvas.selection = false;
   canvas.hoverCursor = 'auto';
   canvas.isDrawingMode = false;
@@ -336,9 +328,9 @@ const createTriangle = canvas => {
     selectable: false
   }));
   canvas.discardActiveObject().requestRenderAll();
-};
+}
 
-const startAddTriangle = canvas => {
+function startAddTriangle(canvas) {
   return _ref7 => {
     let {
       e
@@ -360,9 +352,9 @@ const startAddTriangle = canvas => {
     });
     canvas.add(drawInstance);
   };
-};
+}
 
-const startDrawingTriangle = canvas => {
+function startDrawingTriangle(canvas) {
   return _ref8 => {
     let {
       e
@@ -387,16 +379,10 @@ const startDrawingTriangle = canvas => {
       canvas.renderAll();
     }
   };
-};
+}
 
-const stopDrawingTriangle = () => {
-  mouseDown = false;
-};
-
-const createText = canvas => {
-  canvas.off('mouse:down');
-  canvas.off('mouse:move');
-  canvas.off('mouse:up');
+function createText(canvas) {
+  removeCanvasListener(canvas);
   canvas.isDrawingMode = false;
   const text = new _fabric.fabric.Textbox('text', {
     left: 100,
@@ -406,60 +392,53 @@ const createText = canvas => {
   });
   canvas.add(text);
   canvas.renderAll();
-};
+}
 
-const changeToErasingMode = canvas => {
+function changeToErasingMode(canvas) {
   if (options.currentMode !== modes.ERASER) {
-    canvas.off('mouse:down');
-    canvas.off('mouse:move');
-    canvas.off('mouse:up');
+    removeCanvasListener(canvas);
+    canvas.isDrawingMode = false;
     options.currentMode = modes.ERASER;
-    canvas.freeDrawingBrush = new _fabric.fabric.EraserBrush(canvas);
-    canvas.freeDrawingBrush.width = options.currentWidth;
-    canvas.isDrawingMode = true;
+    canvas.hoverCursor = "url(".concat((0, _cursors.default)({
+      type: 'eraser'
+    }), "), default");
   }
-};
+}
 
-const onSelectMode = canvas => {
+function onSelectMode(canvas) {
   options.currentMode = '';
   canvas.isDrawingMode = false;
-  canvas.off('mouse:down');
-  canvas.off('mouse:move');
-  canvas.off('mouse:up');
+  removeCanvasListener(canvas);
   canvas.getObjects().map(item => item.set({
     selectable: true
   }));
   canvas.hoverCursor = 'all-scroll';
-};
+}
 
-const clearCanvas = canvas => {
+function clearCanvas(canvas) {
   canvas.getObjects().forEach(item => {
     if (item !== canvas.backgroundImage) {
       canvas.remove(item);
     }
   });
-};
+}
 
-const canvasToJson = canvas => {
+function canvasToJson(canvas) {
   alert(JSON.stringify(canvas.toJSON()));
-};
+}
 
-const draw = canvas => {
+function draw(canvas) {
   if (options.currentMode !== modes.PENCIL) {
-    canvas.off('mouse:down');
-    canvas.off('mouse:move');
-    canvas.off('mouse:up');
-    canvas.off('path:created');
-    options.currentMode = modes.PENCIL;
-    canvas.freeDrawingBrush = new _fabric.fabric.PencilBrush(canvas);
+    removeCanvasListener(canvas);
+    options.currentMode = modes.PENCIL; // canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+
     canvas.freeDrawingBrush.width = parseInt(options.currentWidth, 10) || 1;
     canvas.isDrawingMode = true;
   }
-};
+}
 
 const Whiteboard = () => {
   const [canvas, setCanvas] = (0, _react.useState)(null);
-  const [canvasJSON, setCanvasJSON] = (0, _react.useState)(null);
   const [brushWidth, setBrushWidth] = (0, _react.useState)(5);
   const [isFill, setIsFill] = (0, _react.useState)(false);
   const [fileReaderInfo, setFileReaderInfo] = (0, _react.useState)({
@@ -492,21 +471,8 @@ const Whiteboard = () => {
       });
     }
   }, [fileReaderInfo.currentPage]);
-  (0, _react.useEffect)(() => {
-    if (canvas) {
-      addCanvasEventListeners(canvas);
-      canvas.loadFromJSON(canvasJSON);
-      canvas.renderAll();
-    }
-  }, [canvas]);
 
-  const addCanvasEventListeners = canvas => {
-    canvas.on('mouse:up', event => {
-      const data = JSON.stringify(canvas.toJSON());
-    });
-  };
-
-  const uploadImage = e => {
+  function uploadImage(e) {
     const reader = new FileReader();
     const file = e.target.files[0];
     reader.addEventListener('load', () => {
@@ -516,41 +482,41 @@ const Whiteboard = () => {
       });
     });
     reader.readAsDataURL(file);
-  };
+  }
 
-  const changeCurrentWidth = e => {
+  function changeCurrentWidth(e) {
     const intValue = parseInt(e.target.value);
     options.currentWidth = intValue;
     canvas.freeDrawingBrush.width = intValue;
     setBrushWidth(() => intValue);
-  };
+  }
 
-  const changeCurrentColor = e => {
+  function changeCurrentColor(e) {
     options.currentColor = e.target.value;
     canvas.freeDrawingBrush.color = e.target.value;
-  };
+  }
 
-  const changeFill = e => {
+  function changeFill(e) {
     options.fill = e.target.checked;
     setIsFill(() => e.target.checked);
-  };
+  }
 
-  const onSaveCanvasAsImage = () => {
+  function onSaveCanvasAsImage() {
     canvasRef.current.toBlob(function (blob) {
       (0, _fileSaver.saveAs)(blob, 'image.png');
     });
-  };
+  }
 
-  const onFileChange = event => {
+  function onFileChange(event) {
     updateFileReaderInfo({
       file: event.target.files[0],
       currentPageNumber: 1
     });
-  };
+  }
 
-  const updateFileReaderInfo = data => {
+  function updateFileReaderInfo(data) {
     setFileReaderInfo(_objectSpread(_objectSpread({}, fileReaderInfo), data));
-  };
+  }
 
   return /*#__PURE__*/_react.default.createElement("div", {
     className: _indexModule.default.whiteboard
@@ -631,28 +597,30 @@ const Whiteboard = () => {
     value: brushWidth,
     onChange: changeCurrentWidth
   }), /*#__PURE__*/_react.default.createElement("div", {
-    className: "uploadInput"
-  }, /*#__PURE__*/_react.default.createElement("label", {
-    htmlFor: "uploadImage"
-  }, "+Image"), /*#__PURE__*/_react.default.createElement("input", {
+    className: _indexModule.default.uploadDropdown
+  }, /*#__PURE__*/_react.default.createElement("input", {
     ref: uploadImageRef,
     accept: "image/*",
     type: "file",
     onChange: uploadImage
-  })), /*#__PURE__*/_react.default.createElement("div", {
-    className: "uploadInput"
-  }, /*#__PURE__*/_react.default.createElement("label", {
-    htmlFor: "uploadPDF"
-  }, "+PDF"), /*#__PURE__*/_react.default.createElement("input", {
+  }), /*#__PURE__*/_react.default.createElement("input", {
     ref: uploadPdfRef,
     accept: ".pdf",
     type: "file",
     onChange: onFileChange
-  })), /*#__PURE__*/_react.default.createElement("button", {
+  }), /*#__PURE__*/_react.default.createElement("button", {
+    className: _indexModule.default.dropdownButton
+  }, "+Upload"), /*#__PURE__*/_react.default.createElement("div", {
+    className: _indexModule.default.dropdownContent
+  }, /*#__PURE__*/_react.default.createElement("span", {
+    onClick: () => uploadImageRef.current.click()
+  }, "Image"), /*#__PURE__*/_react.default.createElement("span", {
+    onClick: () => uploadPdfRef.current.click()
+  }, "PDF"))), /*#__PURE__*/_react.default.createElement("button", {
     onClick: () => canvasToJson(canvas)
   }, "To Json"), /*#__PURE__*/_react.default.createElement("button", {
     onClick: onSaveCanvasAsImage
-  }, "save as image")), /*#__PURE__*/_react.default.createElement("canvas", {
+  }, "Save as image")), /*#__PURE__*/_react.default.createElement("canvas", {
     ref: canvasRef,
     id: "canvas"
   }), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_PdfReader.default, {
