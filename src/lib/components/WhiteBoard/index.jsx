@@ -340,6 +340,7 @@ const changeToErasingMode = (canvas) => {
     canvas.off('mouse:down');
     canvas.off('mouse:move');
     canvas.off('mouse:up');
+    canvas.isDrawingMode = false;
 
     options.currentMode = modes.ERASER;
     canvas.hoverCursor = `url(${getCursor({ type: 'eraser' })}), default`;
