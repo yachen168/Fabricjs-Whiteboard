@@ -59,27 +59,30 @@ const initCanvas = () => {
   return canvas;
 };
 
-const removeObject = (canvas) => {
+function removeObject(canvas) {
   return (e) => {
     if (options.currentMode === modes.ERASER) {
       canvas.remove(e.target);
     }
   };
-};
+}
 
-const stopDrawing = () => {
+function stopDrawing() {
   mouseDown = false;
-};
+}
+
+function removeCanvasListener(canvas) {
+  canvas.off('mouse:down');
+  canvas.off('mouse:move');
+  canvas.off('mouse:up');
+}
 
 /*  ==== line  ==== */
-const createLine = (canvas) => {
+function createLine(canvas) {
   if (modes.currentMode !== modes.LINE) {
     options.currentMode = modes.LINE;
 
-    canvas.off('mouse:down');
-    canvas.off('mouse:move');
-    canvas.off('mouse:up');
-
+    removeCanvasListener(canvas);
     canvas.on('mouse:down', startAddLine(canvas));
     canvas.on('mouse:move', startDrawingLine(canvas));
     canvas.on('mouse:up', stopDrawing);
@@ -90,9 +93,9 @@ const createLine = (canvas) => {
     canvas.getObjects().map((item) => item.set({ selectable: false }));
     canvas.discardActiveObject().requestRenderAll();
   }
-};
+}
 
-const startAddLine = (canvas) => {
+function startAddLine(canvas) {
   return ({ e }) => {
     mouseDown = true;
 
@@ -106,9 +109,9 @@ const startAddLine = (canvas) => {
     canvas.add(drawInstance);
     canvas.requestRenderAll();
   };
-};
+}
 
-const startDrawingLine = (canvas) => {
+function startDrawingLine(canvas) {
   return ({ e }) => {
     if (mouseDown) {
       const pointer = canvas.getPointer(e);
@@ -120,16 +123,14 @@ const startDrawingLine = (canvas) => {
       canvas.requestRenderAll();
     }
   };
-};
+}
 
 /* ==== rectangle ==== */
-const createRect = (canvas) => {
+function createRect(canvas) {
   if (options.currentMode !== modes.RECTANGLE) {
     options.currentMode = modes.RECTANGLE;
 
-    canvas.off('mouse:down');
-    canvas.off('mouse:move');
-    canvas.off('mouse:up');
+    removeCanvasListener(canvas);
 
     canvas.on('mouse:down', startAddRect(canvas));
     canvas.on('mouse:move', startDrawingRect(canvas));
@@ -141,9 +142,9 @@ const createRect = (canvas) => {
     canvas.getObjects().map((item) => item.set({ selectable: false }));
     canvas.discardActiveObject().requestRenderAll();
   }
-};
+}
 
-const startAddRect = (canvas) => {
+function startAddRect(canvas) {
   return ({ e }) => {
     mouseDown = true;
 
@@ -171,9 +172,9 @@ const startAddRect = (canvas) => {
       }
     });
   };
-};
+}
 
-const startDrawingRect = (canvas) => {
+function startDrawingRect(canvas) {
   return ({ e }) => {
     if (mouseDown) {
       const pointer = canvas.getPointer(e);
@@ -192,16 +193,14 @@ const startDrawingRect = (canvas) => {
       canvas.renderAll();
     }
   };
-};
+}
 
 /* ==== Ellipse ==== */
-const createEllipse = (canvas) => {
+function createEllipse(canvas) {
   if (options.currentMode !== modes.ELLIPSE) {
     options.currentMode = modes.ELLIPSE;
 
-    canvas.off('mouse:down');
-    canvas.off('mouse:move');
-    canvas.off('mouse:up');
+    removeCanvasListener(canvas);
 
     canvas.on('mouse:down', startAddEllipse(canvas));
     canvas.on('mouse:move', startDrawingEllipse(canvas));
@@ -213,9 +212,9 @@ const createEllipse = (canvas) => {
     canvas.getObjects().map((item) => item.set({ selectable: false }));
     canvas.discardActiveObject().requestRenderAll();
   }
-};
+}
 
-const startAddEllipse = (canvas) => {
+function startAddEllipse(canvas) {
   return ({ e }) => {
     mouseDown = true;
 
@@ -235,9 +234,9 @@ const startAddEllipse = (canvas) => {
 
     canvas.add(drawInstance);
   };
-};
+}
 
-const startDrawingEllipse = (canvas) => {
+function startDrawingEllipse(canvas) {
   return ({ e }) => {
     if (mouseDown) {
       const pointer = canvas.getPointer(e);
@@ -255,13 +254,11 @@ const startDrawingEllipse = (canvas) => {
       canvas.renderAll();
     }
   };
-};
+}
 
 /* === triangle === */
-const createTriangle = (canvas) => {
-  canvas.off('mouse:down');
-  canvas.off('mouse:move');
-  canvas.off('mouse:up');
+function createTriangle(canvas) {
+  removeCanvasListener(canvas);
 
   canvas.on('mouse:down', startAddTriangle(canvas));
   canvas.on('mouse:move', startDrawingTriangle(canvas));
@@ -272,9 +269,9 @@ const createTriangle = (canvas) => {
   canvas.isDrawingMode = false;
   canvas.getObjects().map((item) => item.set({ selectable: false }));
   canvas.discardActiveObject().requestRenderAll();
-};
+}
 
-const startAddTriangle = (canvas) => {
+function startAddTriangle(canvas) {
   return ({ e }) => {
     mouseDown = true;
     options.currentMode = modes.TRIANGLE;
@@ -295,9 +292,9 @@ const startAddTriangle = (canvas) => {
 
     canvas.add(drawInstance);
   };
-};
+}
 
-const startDrawingTriangle = (canvas) => {
+function startDrawingTriangle(canvas) {
   return ({ e }) => {
     if (mouseDown) {
       const pointer = canvas.getPointer(e);
@@ -316,12 +313,11 @@ const startDrawingTriangle = (canvas) => {
       canvas.renderAll();
     }
   };
-};
+}
 
-const createText = (canvas) => {
-  canvas.off('mouse:down');
-  canvas.off('mouse:move');
-  canvas.off('mouse:up');
+function createText(canvas) {
+  removeCanvasListener(canvas);
+
   canvas.isDrawingMode = false;
 
   const text = new fabric.Textbox('text', {
@@ -333,57 +329,50 @@ const createText = (canvas) => {
 
   canvas.add(text);
   canvas.renderAll();
-};
+}
 
-const changeToErasingMode = (canvas) => {
+function changeToErasingMode(canvas) {
   if (options.currentMode !== modes.ERASER) {
-    canvas.off('mouse:down');
-    canvas.off('mouse:move');
-    canvas.off('mouse:up');
+    removeCanvasListener(canvas);
+
     canvas.isDrawingMode = false;
 
     options.currentMode = modes.ERASER;
     canvas.hoverCursor = `url(${getCursor({ type: 'eraser' })}), default`;
   }
-};
+}
 
-const onSelectMode = (canvas) => {
+function onSelectMode(canvas) {
   options.currentMode = '';
   canvas.isDrawingMode = false;
 
-  canvas.off('mouse:down');
-  canvas.off('mouse:move');
-  canvas.off('mouse:up');
+  removeCanvasListener(canvas);
 
   canvas.getObjects().map((item) => item.set({ selectable: true }));
   canvas.hoverCursor = 'all-scroll';
-};
+}
 
-const clearCanvas = (canvas) => {
+function clearCanvas(canvas) {
   canvas.getObjects().forEach((item) => {
     if (item !== canvas.backgroundImage) {
       canvas.remove(item);
     }
   });
-};
-
-const canvasToJson = (canvas) => {
+}
+function canvasToJson(canvas) {
   alert(JSON.stringify(canvas.toJSON()));
-};
+}
 
-const draw = (canvas) => {
+function draw(canvas) {
   if (options.currentMode !== modes.PENCIL) {
-    canvas.off('mouse:down');
-    canvas.off('mouse:move');
-    canvas.off('mouse:up');
-    canvas.off('path:created');
+    removeCanvasListener(canvas);
 
     options.currentMode = modes.PENCIL;
     // canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
     canvas.freeDrawingBrush.width = parseInt(options.currentWidth, 10) || 1;
     canvas.isDrawingMode = true;
   }
-};
+}
 
 const Whiteboard = () => {
   const [canvas, setCanvas] = useState(null);
@@ -422,7 +411,7 @@ const Whiteboard = () => {
     }
   }, [fileReaderInfo.currentPage]);
 
-  const uploadImage = (e) => {
+  function uploadImage(e) {
     const reader = new FileReader();
     const file = e.target.files[0];
 
@@ -434,38 +423,38 @@ const Whiteboard = () => {
     });
 
     reader.readAsDataURL(file);
-  };
+  }
 
-  const changeCurrentWidth = (e) => {
+  function changeCurrentWidth(e) {
     const intValue = parseInt(e.target.value);
     options.currentWidth = intValue;
     canvas.freeDrawingBrush.width = intValue;
     setBrushWidth(() => intValue);
-  };
+  }
 
-  const changeCurrentColor = (e) => {
+  function changeCurrentColor(e) {
     options.currentColor = e.target.value;
     canvas.freeDrawingBrush.color = e.target.value;
-  };
+  }
 
-  const changeFill = (e) => {
+  function changeFill(e) {
     options.fill = e.target.checked;
     setIsFill(() => e.target.checked);
-  };
+  }
 
-  const onSaveCanvasAsImage = () => {
+  function onSaveCanvasAsImage() {
     canvasRef.current.toBlob(function (blob) {
       saveAs(blob, 'image.png');
     });
-  };
+  }
 
-  const onFileChange = (event) => {
+  function onFileChange(event) {
     updateFileReaderInfo({ file: event.target.files[0], currentPageNumber: 1 });
-  };
+  }
 
-  const updateFileReaderInfo = (data) => {
+  function updateFileReaderInfo(data) {
     setFileReaderInfo({ ...fileReaderInfo, ...data });
-  };
+  }
 
   return (
     <div className={styles.whiteboard}>

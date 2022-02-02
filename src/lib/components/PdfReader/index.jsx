@@ -5,21 +5,21 @@ import styles from './index.module.scss';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-function PDFReader({ fileReaderInfo, updateFileReaderInfo }) {
-  const onRenderSuccess = () => {
+const PDFReader = ({ fileReaderInfo, updateFileReaderInfo }) => {
+  function onRenderSuccess() {
     const importPDFCanvas = document.querySelector('.import-pdf-page canvas');
     const pdfAsImageSrc = importPDFCanvas.toDataURL();
 
     updateFileReaderInfo({ currentPage: pdfAsImageSrc });
-  };
+  }
 
-  const onDocumentLoadSuccess = ({ numPages }) => {
+  function onDocumentLoadSuccess({ numPages }) {
     updateFileReaderInfo({ totalPages: numPages });
-  };
+  }
 
-  const changePage = (offset) => {
+  function changePage(offset) {
     updateFileReaderInfo({ currentPageNumber: fileReaderInfo.currentPageNumber + offset });
-  };
+  }
 
   const nextPage = () => changePage(1);
   const previousPage = () => changePage(-1);
@@ -63,6 +63,6 @@ function PDFReader({ fileReaderInfo, updateFileReaderInfo }) {
       </div>
     </div>
   );
-}
+};
 
 export default PDFReader;
