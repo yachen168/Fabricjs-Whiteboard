@@ -511,17 +511,18 @@ const Whiteboard = () => {
           value={brushWidth}
           onChange={changeCurrentWidth}
         />
-        <div className="uploadInput">
-          <label htmlFor="uploadImage">+Image</label>
+        <div className={styles.uploadDropdown}>
           <input ref={uploadImageRef} accept="image/*" type="file" onChange={uploadImage} />
-        </div>
-        <div className="uploadInput">
-          <label htmlFor="uploadPDF">+PDF</label>
           <input ref={uploadPdfRef} accept=".pdf" type="file" onChange={onFileChange} />
+          <button className={styles.dropdownButton}>+Upload</button>
+          <div className={styles.dropdownContent}>
+            <span onClick={() => uploadImageRef.current.click()}>Image</span>
+            <span onClick={() => uploadPdfRef.current.click()}>PDF</span>
+          </div>
         </div>
 
         <button onClick={() => canvasToJson(canvas)}>To Json</button>
-        <button onClick={onSaveCanvasAsImage}>save as image</button>
+        <button onClick={onSaveCanvasAsImage}>Save as image</button>
       </div>
       <canvas ref={canvasRef} id="canvas" />
       <div>
