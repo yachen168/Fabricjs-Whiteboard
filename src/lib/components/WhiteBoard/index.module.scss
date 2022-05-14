@@ -7,6 +7,21 @@
     border: 1px solid rgb(165, 165, 165);
     border-radius: 3px;
   }
+
+  button {
+    padding: 12px;
+    margin: 1px;
+    background-color: #7b7de0;
+    border-radius: 3px;
+    color: #fff;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #7173ee;
+    }
+  }
 }
 
 .toolbar {
