@@ -2,6 +2,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  canvas {
+    border: 1px solid rgb(165, 165, 165);
+    border-radius: 3px;
+  }
 }
 
 .toolbar {
@@ -25,11 +30,6 @@
   :global(.p-button) {
     margin: 0 1px;
   }
-}
-
-canvas {
-  border: 1px solid rgb(165, 165, 165);
-  border-radius: 3px;
 }
 
 :global(button) {
@@ -80,7 +80,7 @@ canvas {
   cursor: pointer;
 }
 
-.dropdownContent a:hover {
+.dropdownContent span:hover {
   background-color: #ddd;
 }
 
