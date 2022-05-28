@@ -24,6 +24,6 @@ yarn add react-fabricjs-whiteboard
 import { Whiteboard } from "react-fabricjs-whiteboard";
 
 const App = () => {
-  return <Whiteboard />
+  return <Whiteboard aspectRatio={4 / 3}/>
 };
 ```
