@@ -1,10 +1,8 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+exports.__esModule = true;
 exports.drawingMode = exports.defaultTriangleOptions = exports.defaultRectOptions = exports.defaultLineOptions = exports.defaultEllipseOptions = void 0;
-const drawingMode = {
+var drawingMode = {
   RECTANGLE: 'RECTANGLE',
   ELLIPSE: 'ELLIPSE',
   TRIANGLE: 'TRIANGLE',
@@ -12,7 +10,7 @@ const drawingMode = {
   ERASER: 'ERASER'
 };
 exports.drawingMode = drawingMode;
-const defaultRectOptions = {
+var defaultRectOptions = {
   strokeWidth: 2,
   stroke: 'black',
   fill: 'transparent',
@@ -21,7 +19,7 @@ const defaultRectOptions = {
   objectCaching: false
 };
 exports.defaultRectOptions = defaultRectOptions;
-const defaultEllipseOptions = {
+var defaultEllipseOptions = {
   strokeWidth: 2,
   stroke: 'black',
   fill: 'black',
@@ -29,7 +27,7 @@ const defaultEllipseOptions = {
   noScaleCache: false
 };
 exports.defaultEllipseOptions = defaultEllipseOptions;
-const defaultTriangleOptions = {
+var defaultTriangleOptions = {
   strokeWidth: 2,
   stroke: 'black',
   fill: 'black',
@@ -37,7 +35,7 @@ const defaultTriangleOptions = {
   noScaleCache: false
 };
 exports.defaultTriangleOptions = defaultTriangleOptions;
-const defaultLineOptions = {
+var defaultLineOptions = {
   strokeWidth: 2,
   stroke: 'black',
   fill: 'black',

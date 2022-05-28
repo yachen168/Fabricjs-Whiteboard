@@ -1,17 +1,7 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+exports.__esModule = true;
 exports.default = void 0;
-
-require("core-js/modules/es.json.stringify.js");
-
-require("core-js/modules/web.url.to-json.js");
-
-require("core-js/modules/es.parse-int.js");
-
-require("core-js/modules/web.dom-collections.iterator.js");
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -53,24 +43,20 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-let drawInstance = null;
-let origX;
-let origY;
-let mouseDown = false;
-const options = {
+var drawInstance = null;
+var origX;
+var origY;
+var mouseDown = false;
+var options = {
   currentMode: '',
   currentColor: '#000000',
   currentWidth: 5,
   fill: false,
   group: {}
 };
-const modes = {
+var modes = {
   RECTANGLE: 'RECTANGLE',
   TRIANGLE: 'TRIANGLE',
   ELLIPSE: 'ELLIPSE',
@@ -79,10 +65,10 @@ const modes = {
   ERASER: 'ERASER'
 };
 
-const initCanvas = (width, height) => {
-  const canvas = new _fabric.fabric.Canvas('canvas', {
-    height,
-    width
+var initCanvas = function initCanvas(width, height) {
+  var canvas = new _fabric.fabric.Canvas('canvas', {
+    height: height,
+    width: width
   });
   _fabric.fabric.Object.prototype.transparentCorners = false;
   _fabric.fabric.Object.prototype.cornerStyle = 'circle';
@@ -91,17 +77,17 @@ const initCanvas = (width, height) => {
   _fabric.fabric.Object.prototype.cornerSize = 6;
   _fabric.fabric.Object.prototype.padding = 10;
   _fabric.fabric.Object.prototype.borderDashArray = [5, 5];
-  canvas.on('object:added', e => {
+  canvas.on('object:added', function (e) {
     e.target.on('mousedown', removeObject(canvas));
   });
-  canvas.on('path:created', e => {
+  canvas.on('path:created', function (e) {
     e.path.on('mousedown', removeObject(canvas));
   });
   return canvas;
 };
 
 function removeObject(canvas) {
-  return e => {
+  return function (e) {
     if (options.currentMode === modes.ERASER) {
       canvas.remove(e.target);
     }
@@ -130,20 +116,20 @@ function createLine(canvas) {
     canvas.selection = false;
     canvas.hoverCursor = 'auto';
     canvas.isDrawingMode = false;
-    canvas.getObjects().map(item => item.set({
-      selectable: false
-    }));
+    canvas.getObjects().map(function (item) {
+      return item.set({
+        selectable: false
+      });
+    });
     canvas.discardActiveObject().requestRenderAll();
   }
 }
 
 function startAddLine(canvas) {
-  return _ref => {
-    let {
-      e
-    } = _ref;
+  return function (_ref) {
+    var e = _ref.e;
     mouseDown = true;
-    let pointer = canvas.getPointer(e);
+    var pointer = canvas.getPointer(e);
     drawInstance = new _fabric.fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
       strokeWidth: options.currentWidth,
       stroke: options.currentColor,
@@ -155,13 +141,11 @@ function startAddLine(canvas) {
 }
 
 function startDrawingLine(canvas) {
-  return _ref2 => {
-    let {
-      e
-    } = _ref2;
+  return function (_ref2) {
+    var e = _ref2.e;
 
     if (mouseDown) {
-      const pointer = canvas.getPointer(e);
+      var pointer = canvas.getPointer(e);
       drawInstance.set({
         x2: pointer.x,
         y2: pointer.y
@@ -184,20 +168,20 @@ function createRect(canvas) {
     canvas.selection = false;
     canvas.hoverCursor = 'auto';
     canvas.isDrawingMode = false;
-    canvas.getObjects().map(item => item.set({
-      selectable: false
-    }));
+    canvas.getObjects().map(function (item) {
+      return item.set({
+        selectable: false
+      });
+    });
     canvas.discardActiveObject().requestRenderAll();
   }
 }
 
 function startAddRect(canvas) {
-  return _ref3 => {
-    let {
-      e
-    } = _ref3;
+  return function (_ref3) {
+    var e = _ref3.e;
     mouseDown = true;
-    const pointer = canvas.getPointer(e);
+    var pointer = canvas.getPointer(e);
     origX = pointer.x;
     origY = pointer.y;
     drawInstance = new _fabric.fabric.Rect({
@@ -211,7 +195,7 @@ function startAddRect(canvas) {
       selectable: false
     });
     canvas.add(drawInstance);
-    drawInstance.on('mousedown', e => {
+    drawInstance.on('mousedown', function (e) {
       if (options.currentMode === modes.ERASER) {
         console.log('刪除', e);
         canvas.remove(e.target);
@@ -221,13 +205,11 @@ function startAddRect(canvas) {
 }
 
 function startDrawingRect(canvas) {
-  return _ref4 => {
-    let {
-      e
-    } = _ref4;
+  return function (_ref4) {
+    var e = _ref4.e;
 
     if (mouseDown) {
-      const pointer = canvas.getPointer(e);
+      var pointer = canvas.getPointer(e);
 
       if (pointer.x < origX) {
         drawInstance.set('left', pointer.x);
@@ -259,20 +241,20 @@ function createEllipse(canvas) {
     canvas.selection = false;
     canvas.hoverCursor = 'auto';
     canvas.isDrawingMode = false;
-    canvas.getObjects().map(item => item.set({
-      selectable: false
-    }));
+    canvas.getObjects().map(function (item) {
+      return item.set({
+        selectable: false
+      });
+    });
     canvas.discardActiveObject().requestRenderAll();
   }
 }
 
 function startAddEllipse(canvas) {
-  return _ref5 => {
-    let {
-      e
-    } = _ref5;
+  return function (_ref5) {
+    var e = _ref5.e;
     mouseDown = true;
-    const pointer = canvas.getPointer(e);
+    var pointer = canvas.getPointer(e);
     origX = pointer.x;
     origY = pointer.y;
     drawInstance = new _fabric.fabric.Ellipse({
@@ -290,13 +272,11 @@ function startAddEllipse(canvas) {
 }
 
 function startDrawingEllipse(canvas) {
-  return _ref6 => {
-    let {
-      e
-    } = _ref6;
+  return function (_ref6) {
+    var e = _ref6.e;
 
     if (mouseDown) {
-      const pointer = canvas.getPointer(e);
+      var pointer = canvas.getPointer(e);
 
       if (pointer.x < origX) {
         drawInstance.set('left', pointer.x);
@@ -326,20 +306,20 @@ function createTriangle(canvas) {
   canvas.selection = false;
   canvas.hoverCursor = 'auto';
   canvas.isDrawingMode = false;
-  canvas.getObjects().map(item => item.set({
-    selectable: false
-  }));
+  canvas.getObjects().map(function (item) {
+    return item.set({
+      selectable: false
+    });
+  });
   canvas.discardActiveObject().requestRenderAll();
 }
 
 function startAddTriangle(canvas) {
-  return _ref7 => {
-    let {
-      e
-    } = _ref7;
+  return function (_ref7) {
+    var e = _ref7.e;
     mouseDown = true;
     options.currentMode = modes.TRIANGLE;
-    const pointer = canvas.getPointer(e);
+    var pointer = canvas.getPointer(e);
     origX = pointer.x;
     origY = pointer.y;
     drawInstance = new _fabric.fabric.Triangle({
@@ -357,13 +337,11 @@ function startAddTriangle(canvas) {
 }
 
 function startDrawingTriangle(canvas) {
-  return _ref8 => {
-    let {
-      e
-    } = _ref8;
+  return function (_ref8) {
+    var e = _ref8.e;
 
     if (mouseDown) {
-      const pointer = canvas.getPointer(e);
+      var pointer = canvas.getPointer(e);
 
       if (pointer.x < origX) {
         drawInstance.set('left', pointer.x);
@@ -386,7 +364,7 @@ function startDrawingTriangle(canvas) {
 function createText(canvas) {
   removeCanvasListener(canvas);
   canvas.isDrawingMode = false;
-  const text = new _fabric.fabric.Textbox('text', {
+  var text = new _fabric.fabric.Textbox('text', {
     left: 100,
     top: 100,
     fill: options.currentColor,
@@ -401,9 +379,9 @@ function changeToErasingMode(canvas) {
     removeCanvasListener(canvas);
     canvas.isDrawingMode = false;
     options.currentMode = modes.ERASER;
-    canvas.hoverCursor = "url(".concat((0, _cursors.default)({
+    canvas.hoverCursor = "url(" + (0, _cursors.default)({
       type: 'eraser'
-    }), "), default");
+    }) + "), default";
   }
 }
 
@@ -411,14 +389,16 @@ function onSelectMode(canvas) {
   options.currentMode = '';
   canvas.isDrawingMode = false;
   removeCanvasListener(canvas);
-  canvas.getObjects().map(item => item.set({
-    selectable: true
-  }));
+  canvas.getObjects().map(function (item) {
+    return item.set({
+      selectable: true
+    });
+  });
   canvas.hoverCursor = 'all-scroll';
 }
 
 function clearCanvas(canvas) {
-  canvas.getObjects().forEach(item => {
+  canvas.getObjects().forEach(function (item) {
     if (item !== canvas.backgroundImage) {
       canvas.remove(item);
     }
@@ -440,16 +420,16 @@ function draw(canvas) {
 }
 
 function handleResize(callback) {
-  const resize_ob = new ResizeObserver(callback);
+  var resize_ob = new ResizeObserver(callback);
   return resize_ob;
 }
 
 function resizeCanvas(canvas, whiteboard) {
-  return () => {
-    const ratio = canvas.getWidth() / canvas.getHeight();
-    const whiteboardWidth = whiteboard.clientWidth;
-    const scale = whiteboardWidth / canvas.getWidth();
-    const zoom = canvas.getZoom() * scale;
+  return function () {
+    var ratio = canvas.getWidth() / canvas.getHeight();
+    var whiteboardWidth = whiteboard.clientWidth;
+    var scale = whiteboardWidth / canvas.getWidth();
+    var zoom = canvas.getZoom() * scale;
     canvas.setDimensions({
       width: whiteboardWidth,
       height: whiteboardWidth / ratio
@@ -458,35 +438,50 @@ function resizeCanvas(canvas, whiteboard) {
   };
 }
 
-const Whiteboard = _ref9 => {
-  let {
-    aspectRatio = 4 / 3
-  } = _ref9;
-  const [canvas, setCanvas] = (0, _react.useState)(null);
-  const [brushWidth, setBrushWidth] = (0, _react.useState)(5);
-  const [isFill, setIsFill] = (0, _react.useState)(false);
-  const [fileReaderInfo, setFileReaderInfo] = (0, _react.useState)({
+var Whiteboard = function Whiteboard(_ref9) {
+  var _ref9$aspectRatio = _ref9.aspectRatio,
+      aspectRatio = _ref9$aspectRatio === void 0 ? 4 / 3 : _ref9$aspectRatio;
+
+  var _useState = (0, _react.useState)(null),
+      canvas = _useState[0],
+      setCanvas = _useState[1];
+
+  var _useState2 = (0, _react.useState)(5),
+      brushWidth = _useState2[0],
+      setBrushWidth = _useState2[1];
+
+  var _useState3 = (0, _react.useState)(false),
+      isFill = _useState3[0],
+      setIsFill = _useState3[1];
+
+  var _useState4 = (0, _react.useState)({
     file: '',
     totalPages: null,
     currentPageNumber: 1,
     currentPage: ''
-  });
-  const canvasRef = (0, _react.useRef)(null);
-  const whiteboardRef = (0, _react.useRef)(null);
-  const uploadImageRef = (0, _react.useRef)(null);
-  const uploadPdfRef = (0, _react.useRef)(null);
-  (0, _react.useEffect)(() => {
+  }),
+      fileReaderInfo = _useState4[0],
+      setFileReaderInfo = _useState4[1];
+
+  var canvasRef = (0, _react.useRef)(null);
+  var whiteboardRef = (0, _react.useRef)(null);
+  var uploadImageRef = (0, _react.useRef)(null);
+  var uploadPdfRef = (0, _react.useRef)(null);
+  (0, _react.useEffect)(function () {
     if (!canvas && canvasRef.current) {
-      const canvas = initCanvas(whiteboardRef.current.clientWidth, whiteboardRef.current.clientWidth / aspectRatio);
-      setCanvas(() => canvas);
-      handleResize(resizeCanvas(canvas, whiteboardRef.current)).observe(whiteboardRef.current);
+      var _canvas = initCanvas(whiteboardRef.current.clientWidth, whiteboardRef.current.clientWidth / aspectRatio);
+
+      setCanvas(function () {
+        return _canvas;
+      });
+      handleResize(resizeCanvas(_canvas, whiteboardRef.current)).observe(whiteboardRef.current);
     }
   }, [canvasRef]);
-  (0, _react.useEffect)(() => {
+  (0, _react.useEffect)(function () {
     if (canvas) {
-      const center = canvas.getCenter();
+      var center = canvas.getCenter();
 
-      _fabric.fabric.Image.fromURL(fileReaderInfo.currentPage, img => {
+      _fabric.fabric.Image.fromURL(fileReaderInfo.currentPage, function (img) {
         img.scaleToHeight(canvas.height);
         canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
           top: center.top,
@@ -500,10 +495,10 @@ const Whiteboard = _ref9 => {
   }, [fileReaderInfo.currentPage]);
 
   function uploadImage(e) {
-    const reader = new FileReader();
-    const file = e.target.files[0];
-    reader.addEventListener('load', () => {
-      _fabric.fabric.Image.fromURL(reader.result, img => {
+    var reader = new FileReader();
+    var file = e.target.files[0];
+    reader.addEventListener('load', function () {
+      _fabric.fabric.Image.fromURL(reader.result, function (img) {
         img.scaleToHeight(canvas.height);
         canvas.add(img);
       });
@@ -512,10 +507,12 @@ const Whiteboard = _ref9 => {
   }
 
   function changeCurrentWidth(e) {
-    const intValue = parseInt(e.target.value);
+    var intValue = parseInt(e.target.value);
     options.currentWidth = intValue;
     canvas.freeDrawingBrush.width = intValue;
-    setBrushWidth(() => intValue);
+    setBrushWidth(function () {
+      return intValue;
+    });
   }
 
   function changeCurrentColor(e) {
@@ -525,7 +522,9 @@ const Whiteboard = _ref9 => {
 
   function changeFill(e) {
     options.fill = e.target.checked;
-    setIsFill(() => e.target.checked);
+    setIsFill(function () {
+      return e.target.checked;
+    });
   }
 
   function onSaveCanvasAsImage() {
@@ -542,7 +541,7 @@ const Whiteboard = _ref9 => {
   }
 
   function updateFileReaderInfo(data) {
-    setFileReaderInfo(_objectSpread(_objectSpread({}, fileReaderInfo), data));
+    setFileReaderInfo(_extends({}, fileReaderInfo, data));
   }
 
   return /*#__PURE__*/_react.default.createElement("div", {
@@ -552,55 +551,73 @@ const Whiteboard = _ref9 => {
     className: _indexModule.default.toolbar
   }, /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    onClick: () => createLine(canvas)
+    onClick: function onClick() {
+      return createLine(canvas);
+    }
   }, /*#__PURE__*/_react.default.createElement("img", {
     src: _line.default,
     alt: "line"
   })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    onClick: () => createRect(canvas)
+    onClick: function onClick() {
+      return createRect(canvas);
+    }
   }, /*#__PURE__*/_react.default.createElement("img", {
     src: _rectangle.default,
     alt: "Rectangle"
   })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    onClick: () => createEllipse(canvas)
+    onClick: function onClick() {
+      return createEllipse(canvas);
+    }
   }, /*#__PURE__*/_react.default.createElement("img", {
     src: _ellipse.default,
     alt: "Ellipse"
   })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    onClick: () => createTriangle(canvas, options)
+    onClick: function onClick() {
+      return createTriangle(canvas, options);
+    }
   }, /*#__PURE__*/_react.default.createElement("img", {
     src: _triangle.default,
     alt: "Triangle"
   })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    onClick: () => draw(canvas)
+    onClick: function onClick() {
+      return draw(canvas);
+    }
   }, /*#__PURE__*/_react.default.createElement("img", {
     src: _pencil.default,
     alt: "Pencil"
   })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    onClick: () => createText(canvas)
+    onClick: function onClick() {
+      return createText(canvas);
+    }
   }, /*#__PURE__*/_react.default.createElement("img", {
     src: _text.default,
     alt: "Text"
   })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    onClick: () => onSelectMode(canvas)
+    onClick: function onClick() {
+      return onSelectMode(canvas);
+    }
   }, /*#__PURE__*/_react.default.createElement("img", {
     src: _select.default,
     alt: "Selection mode"
   })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    onClick: () => changeToErasingMode(canvas)
+    onClick: function onClick() {
+      return changeToErasingMode(canvas);
+    }
   }, /*#__PURE__*/_react.default.createElement("img", {
     src: _eraser.default,
     alt: "Eraser"
   })), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    onClick: () => clearCanvas(canvas)
+    onClick: function onClick() {
+      return clearCanvas(canvas);
+    }
   }, /*#__PURE__*/_react.default.createElement("img", {
     src: _delete.default,
     alt: "Delete"
@@ -641,11 +658,17 @@ const Whiteboard = _ref9 => {
   }, "+Upload"), /*#__PURE__*/_react.default.createElement("div", {
     className: _indexModule.default.dropdownContent
   }, /*#__PURE__*/_react.default.createElement("span", {
-    onClick: () => uploadImageRef.current.click()
+    onClick: function onClick() {
+      return uploadImageRef.current.click();
+    }
   }, "Image"), /*#__PURE__*/_react.default.createElement("span", {
-    onClick: () => uploadPdfRef.current.click()
+    onClick: function onClick() {
+      return uploadPdfRef.current.click();
+    }
   }, "PDF"))), /*#__PURE__*/_react.default.createElement("button", {
-    onClick: () => canvasToJson(canvas)
+    onClick: function onClick() {
+      return canvasToJson(canvas);
+    }
   }, "To Json"), /*#__PURE__*/_react.default.createElement("button", {
     onClick: onSaveCanvasAsImage
   }, "Save as image")), /*#__PURE__*/_react.default.createElement("canvas", {

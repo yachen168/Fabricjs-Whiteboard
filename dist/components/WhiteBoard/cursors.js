@@ -1,18 +1,14 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+exports.__esModule = true;
 exports.default = void 0;
 
 var _remove = _interopRequireDefault(require("./images/remove.svg"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const getCursor = _ref => {
-  let {
-    type
-  } = _ref;
+var getCursor = function getCursor(_ref) {
+  var type = _ref.type;
 
   switch (type) {
     case 'eraser':

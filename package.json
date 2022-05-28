@@ -1,6 +1,6 @@
 {
   "name": "react-fabricjs-whiteboard",
-  "version": "1.1.11",
+  "version": "1.1.12",
   "description": "React whiteboard with PDF reader",
   "author": "Yachen168",
   "private": false,
@@ -35,8 +35,9 @@
   "devDependencies": {
     "@babel/cli": "^7.16.7",
     "@babel/core": "^7.16.7",
-    "@babel/preset-env": "^7.16.7",
     "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-react": "^7.17.12",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
