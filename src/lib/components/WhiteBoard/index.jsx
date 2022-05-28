@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { fabric } from 'fabric';
 import PdfReader from '../PdfReader';
 import { saveAs } from 'file-saver';
@@ -392,7 +393,7 @@ function resizeCanvas(canvas, whiteboard) {
   };
 }
 
-const Whiteboard = () => {
+const Whiteboard = ({ aspectRatio = 4 / 3 }) => {
   const [canvas, setCanvas] = useState(null);
   const [brushWidth, setBrushWidth] = useState(5);
   const [isFill, setIsFill] = useState(false);
@@ -409,10 +410,9 @@ const Whiteboard = () => {
 
   useEffect(() => {
     if (!canvas && canvasRef.current) {
-      const canvasRatio = 1 / 1;
       const canvas = initCanvas(
         whiteboardRef.current.clientWidth,
-        whiteboardRef.current.clientWidth / canvasRatio,
+        whiteboardRef.current.clientWidth / aspectRatio,
       );
       setCanvas(() => canvas);
 
@@ -546,6 +546,10 @@ const Whiteboard = () => {
       </div>
     </div>
   );
+};
+
+Whiteboard.propTypes = {
+  aspectRatio: PropTypes.number,
 };
 
 export default Whiteboard;
