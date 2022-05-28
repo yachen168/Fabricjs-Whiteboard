@@ -39,8 +39,8 @@ const modes = {
   ERASER: 'ERASER',
 };
 
-const initCanvas = () => {
-  const canvas = new fabric.Canvas('canvas', { height: 600, width: 800 });
+const initCanvas = (width, height) => {
+  const canvas = new fabric.Canvas('canvas', { height, width });
   fabric.Object.prototype.transparentCorners = false;
   fabric.Object.prototype.cornerStyle = 'circle';
   fabric.Object.prototype.borderColor = '#4447A9';
@@ -374,6 +374,24 @@ function draw(canvas) {
   }
 }
 
+function handleResize(callback) {
+  const resize_ob = new ResizeObserver(callback);
+
+  return resize_ob;
+}
+
+function resizeCanvas(canvas, whiteboard) {
+  return () => {
+    const ratio = canvas.getWidth() / canvas.getHeight();
+    const whiteboardWidth = whiteboard.clientWidth;
+
+    const scale = whiteboardWidth / canvas.getWidth();
+    const zoom = canvas.getZoom() * scale;
+    canvas.setDimensions({ width: whiteboardWidth, height: whiteboardWidth / ratio });
+    canvas.setViewportTransform([zoom, 0, 0, zoom, 0, 0]);
+  };
+}
+
 const Whiteboard = () => {
   const [canvas, setCanvas] = useState(null);
   const [brushWidth, setBrushWidth] = useState(5);
@@ -385,14 +403,22 @@ const Whiteboard = () => {
     currentPage: '',
   });
   const canvasRef = useRef(null);
+  const whiteboardRef = useRef(null);
   const uploadImageRef = useRef(null);
   const uploadPdfRef = useRef(null);
 
   useEffect(() => {
-    if (!canvas) {
-      setCanvas(() => initCanvas());
+    if (!canvas && canvasRef.current) {
+      const canvasRatio = 1 / 1;
+      const canvas = initCanvas(
+        whiteboardRef.current.clientWidth,
+        whiteboardRef.current.clientWidth / canvasRatio,
+      );
+      setCanvas(() => canvas);
+
+      handleResize(resizeCanvas(canvas, whiteboardRef.current)).observe(whiteboardRef.current);
     }
-  }, []);
+  }, [canvasRef]);
 
   useEffect(() => {
     if (canvas) {
@@ -457,7 +483,7 @@ const Whiteboard = () => {
   }
 
   return (
-    <div className={styles.whiteboard}>
+    <div ref={whiteboardRef} className={styles.whiteboard}>
       <div className={styles.toolbar}>
         <button type="button" onClick={() => createLine(canvas)}>
           <img src={LineIcon} alt="line" />

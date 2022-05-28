@@ -1,3 +1,8 @@
 .app {
   min-height: 100vh;
+
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+  }
 }
