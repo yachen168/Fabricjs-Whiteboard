@@ -15,6 +15,8 @@ require("core-js/modules/web.dom-collections.iterator.js");
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
 var _fabric = require("fabric");
 
 var _PdfReader = _interopRequireDefault(require("../PdfReader"));
@@ -77,10 +79,10 @@ const modes = {
   ERASER: 'ERASER'
 };
 
-const initCanvas = () => {
+const initCanvas = (width, height) => {
   const canvas = new _fabric.fabric.Canvas('canvas', {
-    height: 600,
-    width: 800
+    height,
+    width
   });
   _fabric.fabric.Object.prototype.transparentCorners = false;
   _fabric.fabric.Object.prototype.cornerStyle = 'circle';
@@ -437,7 +439,29 @@ function draw(canvas) {
   }
 }
 
-const Whiteboard = () => {
+function handleResize(callback) {
+  const resize_ob = new ResizeObserver(callback);
+  return resize_ob;
+}
+
+function resizeCanvas(canvas, whiteboard) {
+  return () => {
+    const ratio = canvas.getWidth() / canvas.getHeight();
+    const whiteboardWidth = whiteboard.clientWidth;
+    const scale = whiteboardWidth / canvas.getWidth();
+    const zoom = canvas.getZoom() * scale;
+    canvas.setDimensions({
+      width: whiteboardWidth,
+      height: whiteboardWidth / ratio
+    });
+    canvas.setViewportTransform([zoom, 0, 0, zoom, 0, 0]);
+  };
+}
+
+const Whiteboard = _ref9 => {
+  let {
+    aspectRatio = 4 / 3
+  } = _ref9;
   const [canvas, setCanvas] = (0, _react.useState)(null);
   const [brushWidth, setBrushWidth] = (0, _react.useState)(5);
   const [isFill, setIsFill] = (0, _react.useState)(false);
@@ -448,13 +472,16 @@ const Whiteboard = () => {
     currentPage: ''
   });
   const canvasRef = (0, _react.useRef)(null);
+  const whiteboardRef = (0, _react.useRef)(null);
   const uploadImageRef = (0, _react.useRef)(null);
   const uploadPdfRef = (0, _react.useRef)(null);
   (0, _react.useEffect)(() => {
-    if (!canvas) {
-      setCanvas(() => initCanvas());
+    if (!canvas && canvasRef.current) {
+      const canvas = initCanvas(whiteboardRef.current.clientWidth, whiteboardRef.current.clientWidth / aspectRatio);
+      setCanvas(() => canvas);
+      handleResize(resizeCanvas(canvas, whiteboardRef.current)).observe(whiteboardRef.current);
     }
-  }, []);
+  }, [canvasRef]);
   (0, _react.useEffect)(() => {
     if (canvas) {
       const center = canvas.getCenter();
@@ -519,6 +546,7 @@ const Whiteboard = () => {
   }
 
   return /*#__PURE__*/_react.default.createElement("div", {
+    ref: whiteboardRef,
     className: _indexModule.default.whiteboard
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: _indexModule.default.toolbar
@@ -629,5 +657,8 @@ const Whiteboard = () => {
   })));
 };
 
+Whiteboard.propTypes = {
+  aspectRatio: _propTypes.default.number
+};
 var _default = Whiteboard;
 exports.default = _default;
